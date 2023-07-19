@@ -80,7 +80,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(c.moveToFirst()){
             int index = 0;
             do {
-
                 Term t = new Term(c.getInt(0), c.getString(1), c.getString(2), c.getString(3));
                 termList.add(t);
                 index++;
@@ -100,12 +99,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int index = 0;
             do {
 
-                int idIdx = c.getColumnIndex(CourseTable._ID);
+                int termIdIdx = c.getColumnIndex(CourseTable.TERM_ID);
                 int titleIdx = c.getColumnIndex(CourseTable.TITLE);
                 int startIdx = c.getColumnIndex(CourseTable.START);
                 int endIdx = c.getColumnIndex(CourseTable.END);
 
-                Course course = new Course(c.getInt(idIdx), c.getString(titleIdx), c.getString(startIdx), c.getString(endIdx));
+                Course course = new Course(c.getInt(termIdIdx), c.getString(titleIdx), c.getString(startIdx), c.getString(endIdx));
                 courseList.add(course);
                 index++;
             } while(c.move(index));
@@ -146,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(CourseTable.INSTRUCTOR_EMAIL, c.getInstructorEmail());
         cv.put(CourseTable.INSTRUCTOR_PHONE, c.getInstructorPhone());
 
-        long result = db.insert(TermTable.NAME, null, cv);
+        long result = db.insert(CourseTable.NAME, null, cv);
         if(result > 0){
             success = true;
         }

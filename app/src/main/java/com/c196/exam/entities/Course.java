@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 public class Course {
+    private int id;
     private String title;
     private String start;
     private String end;
@@ -115,6 +116,10 @@ public class Course {
 
     public void setAssessments(ArrayList<Assessment> assessments) {
         this.assessments = assessments;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public enum Statuses {

@@ -5,9 +5,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.c196.exam.database.DatabaseHelper;
+import com.c196.exam.entities.Course;
 import com.c196.exam.entities.Term;
 import com.c196.exam.ui.dialogs.CreateClassDialogFragment;
 import com.c196.exam.ui.dialogs.CreateTermDialogFragment;
@@ -46,8 +49,13 @@ public class TermActivity extends AppCompatActivity {
 
         LinearLayout ll = findViewById(R.id.main_layout);
 
-        for ( Term t : dbh.getCourses() ) {
-            getSupportFragmentManager().beginTransaction().add(ll.getId(), CardFragment.newInstance(t.getId(), t.getTitle(), t.getStart(), t.getEnd())).commit();
+        for ( Course c : dbh.getCourses() ) {
+            getSupportFragmentManager().beginTransaction().add(ll.getId(), CardFragment.newInstance(c.getId(), c.getTitle(), c.getStart(), c.getEnd())).commit();
         }
+
+        View v = this.findViewById(R.id.main_layout);
+        v.setOnClickListener((view) -> {
+            Log.d("MSG", "CLICKED");
+        });
     }
 }

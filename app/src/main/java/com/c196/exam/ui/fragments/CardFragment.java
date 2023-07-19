@@ -31,6 +31,22 @@ public class CardFragment extends Fragment {
     private static final String TERM_START = "TERM_START";
     private static final String TERM_END= "TERM_END";
 
+    public String getTermTitle() {
+        return termTitle;
+    }
+
+    public String getTermStart() {
+        return termStart;
+    }
+
+    public String getTermEnd() {
+        return termEnd;
+    }
+
+    public Integer getTermId() {
+        return termId;
+    }
+
     private String termTitle;
     private String termStart;
     private String termEnd;
@@ -75,10 +91,10 @@ public class CardFragment extends Fragment {
         startText.setText(termStart);
         endText.setText(termEnd);
 
-        v.setOnClickListener((view) -> {
+        /*v.setOnClickListener((view) -> {
             MainActivity ma = (MainActivity) getActivity();
             ma.OpenTermActivity(termTitle, termStart, termEnd, termId);
-        });
+        });*/
 
         return v;
     }

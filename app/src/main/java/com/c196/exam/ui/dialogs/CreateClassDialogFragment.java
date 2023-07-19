@@ -63,7 +63,7 @@ public class CreateClassDialogFragment extends DialogFragment {
                     }
 
                     try{
-                        Integer termId = savedInstanceState.getInt("termId");
+                        Integer termId = this.getArguments().getInt("termId");
                         Course c = new Course(termId, className.getText().toString(), startDateTime, endDateTime);
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {
                             SQLiteDatabase db = dh.getWritableDatabase();

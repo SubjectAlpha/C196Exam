@@ -2,9 +2,13 @@ package com.c196.exam;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.c196.exam.database.DatabaseHelper;
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DatabaseHelper dbh = new DatabaseHelper(this);
+        //dbh.onUpgrade(dbh.getReadableDatabase(), 0, 1);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -37,6 +42,18 @@ public class MainActivity extends AppCompatActivity {
         for ( Term t : dbh.getTerms() ) {
             getSupportFragmentManager().beginTransaction().add(ll.getId(), CardFragment.newInstance(t.getId(), t.getTitle(), t.getStart(), t.getEnd())).commit();
         }
+
+        View v = this.findViewById(R.id.main_layout);
+        v.setOnClickListener((view) -> {
+            Log.d("MSG", "CLICKED");
+            CardFragment f = (CardFragment) getSupportFragmentManager().findFragmentById(R.id.card_fragment);
+            String title = f.getTermTitle();
+            String start = f.getTermStart();
+            String end = f.getTermEnd();
+            Integer id = f.getTermId();
+
+            OpenTermActivity(title, start, end, id);
+        });
     }
 
     public void OpenTermActivity(String title, String start, String end, int id) {
