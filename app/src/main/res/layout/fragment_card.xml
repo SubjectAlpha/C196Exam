@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/term_name"
+            android:id="@+id/name"
             android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -27,7 +27,7 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/term_start"
+            android:id="@+id/start"
             android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -35,7 +35,7 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/term_end"
+            android:id="@+id/end"
             android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
