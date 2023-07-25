@@ -36,15 +36,24 @@ public class CreateClassDialogFragment extends DialogFragment {
         LinearLayout layout = new LinearLayout(this.getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
         final EditText className = new EditText(this.requireContext());
-        final EditText startDate = new DatePicker(this.requireContext(), this.getChildFragmentManager(), "Start Date");
-        final EditText endDate = new DatePicker(this.requireContext(), this.getChildFragmentManager(), "End Date");
+        final DatePicker startDate = new DatePicker(this.requireContext(), this.getChildFragmentManager(), "Start Date");
+        final DatePicker endDate = new DatePicker(this.requireContext(), this.getChildFragmentManager(), "End Date");
         final EditText classNote = new EditText(this.requireContext());
+        final EditText instructorFirstName = new EditText(this.requireContext());
+        final EditText instructorLastName = new EditText(this.requireContext());
+        final EditText instructorEmail = new EditText(this.requireContext());
+        final EditText instructorPhone = new EditText(this.requireContext());
+
         className.setHint("Class name");
         classNote.setHint("Required note for class");
         layout.addView(className);
         layout.addView(startDate);
         layout.addView(endDate);
         layout.addView(classNote);
+        layout.addView(instructorFirstName);
+        layout.addView(instructorLastName);
+        layout.addView(instructorEmail);
+        layout.addView(instructorPhone);
         builder.setTitle("Create a new class");
         builder.setView(layout)
                 // Add action button validates the start/end dates before and after conversion

@@ -21,6 +21,22 @@ public class Course {
         this.title = title;
         this.start = start;
         this.end = end;
+        this.status = Statuses.PENDING.name();
+    }
+
+    public Course(String title, String start, String end, String status,
+                  String instructorFirstName, String instructorLastName, String instructorEmail,
+                  String instructorPhone, Integer termId) {
+        this.title = title;
+        this.start = start;
+        this.end = end;
+        this.status = status;
+        this.instructorFirstName = instructorFirstName;
+        this.instructorLastName = instructorLastName;
+        this.instructorEmail = instructorEmail;
+        this.instructorPhone = instructorPhone;
+        this.termId = termId;
+        this.status = Statuses.PENDING.name();
     }
 
     public Course(String title, String start, String end, String status,
@@ -36,6 +52,7 @@ public class Course {
         this.instructorPhone = instructorPhone;
         this.termId = termId;
         this.assessments = assessments;
+        this.status = Statuses.PENDING.name();
     }
 
     public String getTitle() {
@@ -123,8 +140,8 @@ public class Course {
     }
 
     public enum Statuses {
-        UNBEGUN,
-        STARTED,
+        PENDING,
+        IN_PROGRESS,
         COMPLETE
     }
 }
