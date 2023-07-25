@@ -23,7 +23,7 @@ public class TermActivity extends AppCompatActivity {
         setContentView(R.layout.activity_term);
         DatabaseHelper dbh = new DatabaseHelper(this);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
         setSupportActionBar(myToolbar);
 
         Intent newIntent = getIntent();
@@ -31,6 +31,9 @@ public class TermActivity extends AppCompatActivity {
         String start = newIntent.getStringExtra("start");
         String end = newIntent.getStringExtra("end");
         Integer id = newIntent.getIntExtra("id", -1);
+
+        start = start.split("T")[0];
+        end = end.split("T")[0];
 
         myToolbar.setTitle(title);
         myToolbar.setSubtitle(start + " - " + end);

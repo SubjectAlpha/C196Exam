@@ -24,10 +24,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTermsQuery = "CREATE TABLE '%1$s' ( '%2$s' INTEGER PRIMARY KEY, '%3$s' TEXT, '" +
                 "%4$s' VARCHAR, '%5$s' VARCHAR)";
+
         String createCourseQuery = "CREATE TABLE '%1$s' ( " +
                 "'%2$s' INTEGER PRIMARY KEY, '%3$s' TEXT, '%4$s' VARCHAR, '%5$s' VARCHAR, " +
                 "'%6$s' TEXT, '%7$s' NUMBER, '%8$s' VARCHAR, '%9$s' VARCHAR, '%10$s' VARCHAR, " +
                 "'%11$s' VARCHAR, FOREIGN KEY('%7$s') REFERENCES '%12$s'('%13$s'))";
+
+        String createCourseNoteQuery = "CREATE TABLE '%1$s' (" +
+                "'%2$s' INTEGER PRIMARY KEY, " +
+                "'%3$s' TEXT, '%4$s' NUMBER, FOREIGN KEY('%4$s') REFERENCES '%5$s'('%6$s'))";
 
         try{
             createTermsQuery = String.format(createTermsQuery,
@@ -52,12 +57,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     TermTable.NAME,
                     TermTable._ID
                     );
+
+            createCourseNoteQuery = String.format(createCourseNoteQuery,
+                    CourseNoteTable.NAME,
+                    CourseNoteTable._ID,
+                    CourseNoteTable.VALUE,
+                    CourseNoteTable.COURSE_ID,
+                    CourseTable.NAME,
+                    CourseTable._ID
+                    );
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
 
         db.execSQL(createTermsQuery);
         db.execSQL(createCourseQuery);
+        db.execSQL(createCourseNoteQuery);
     }
 
     @Override
@@ -130,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return success;
     }
 
-    public boolean addCourse(Course c) {
+    public boolean addCourse(Course c, String note) {
         boolean success = false;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -171,6 +186,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String INSTRUCTOR_LAST_NAME = "instructorLastName";
         public static final String INSTRUCTOR_EMAIL = "instructorEmail";
         public static final String INSTRUCTOR_PHONE= "instructorPhone";
+    }
 
+    private static class CourseNoteTable implements BaseColumns {
+        public static final String NAME = "CourseNotes";
+        public static final String COURSE_ID = "courseId";
+        public static final String VALUE = "value";
     }
 }

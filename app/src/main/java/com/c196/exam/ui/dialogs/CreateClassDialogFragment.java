@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -44,16 +45,26 @@ public class CreateClassDialogFragment extends DialogFragment {
         final EditText instructorEmail = new EditText(this.requireContext());
         final EditText instructorPhone = new EditText(this.requireContext());
 
+        startDate.setInputType(InputType.TYPE_CLASS_DATETIME);
+        endDate.setInputType(InputType.TYPE_CLASS_DATETIME);
+        instructorEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        instructorPhone.setInputType(InputType.TYPE_CLASS_PHONE);
+        classNote.setInputType(InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE);
+
         className.setHint("Class name");
         classNote.setHint("Required note for class");
+        instructorFirstName.setHint("Instructor First Name");
+        instructorLastName.setHint("Instructor First Name");
+        instructorEmail.setHint("Instructor Email");
+        instructorPhone.setHint("Instructor Phone Number");
         layout.addView(className);
         layout.addView(startDate);
         layout.addView(endDate);
-        layout.addView(classNote);
         layout.addView(instructorFirstName);
         layout.addView(instructorLastName);
         layout.addView(instructorEmail);
         layout.addView(instructorPhone);
+        layout.addView(classNote);
         builder.setTitle("Create a new class");
         builder.setView(layout)
                 // Add action button validates the start/end dates before and after conversion
@@ -77,7 +88,7 @@ public class CreateClassDialogFragment extends DialogFragment {
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {
                             SQLiteDatabase db = dh.getWritableDatabase();
                             Log.d("INFO", "DB Open: " + db.isOpen());
-                            boolean result = dh.addCourse(c);
+                            boolean result = dh.addCourse(c, classNote.getText().toString());
                             Log.d("DB RESULT", "" + result);
                             db.close();
 

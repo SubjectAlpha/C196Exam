@@ -29,25 +29,9 @@ public class TermCardFragment extends Fragment {
     private static final String COURSE_START = "COURSE_START";
     private static final String COURSE_END= "COURSE_END";
 
-    public String getTermTitle() {
-        return termTitle;
-    }
-
-    public String getTermStart() {
-        return termStart;
-    }
-
-    public String getTermEnd() {
-        return termEnd;
-    }
-
-    public Integer getTermId() {
-        return termId;
-    }
-
-    private String termTitle;
-    private String termStart;
-    private String termEnd;
+    private String courseTitle;
+    private String courseStart;
+    private String courseEnd;
     private Integer termId;
 
     public TermCardFragment() {
@@ -58,8 +42,8 @@ public class TermCardFragment extends Fragment {
         TermCardFragment fragment = new TermCardFragment();
         Bundle args = new Bundle();
         args.putString(COURSE_TITLE, c.getTitle());
-        args.putString(COURSE_START, c.getStart());
-        args.putString(COURSE_END, c.getEnd());
+        args.putString(COURSE_START, c.getStart().split("T")[0]);
+        args.putString(COURSE_END, c.getEnd().split("T")[0]);
         args.putInt(COURSE_ID, c.getId());
         fragment.setArguments(args);
 
@@ -70,9 +54,9 @@ public class TermCardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            termTitle = getArguments().getString(COURSE_TITLE);
-            termStart = getArguments().getString(COURSE_START);
-            termEnd = getArguments().getString(COURSE_END);
+            courseTitle = getArguments().getString(COURSE_TITLE);
+            courseStart = getArguments().getString(COURSE_START);
+            courseEnd = getArguments().getString(COURSE_END);
             termId = getArguments().getInt(COURSE_ID);
         }
     }
@@ -85,9 +69,9 @@ public class TermCardFragment extends Fragment {
         endText = v.findViewById(R.id.end);
         titleText = v.findViewById(R.id.name);
 
-        titleText.setText(termTitle);
-        startText.setText(termStart);
-        endText.setText(termEnd);
+        titleText.setText(courseTitle);
+        startText.setText(courseStart);
+        endText.setText(courseEnd);
 
         v.setOnClickListener((view) -> {
             System.out.println("derp");

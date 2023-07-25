@@ -58,8 +58,8 @@ public class MainCardFragment extends Fragment {
         MainCardFragment fragment = new MainCardFragment();
         Bundle args = new Bundle();
         args.putString(TERM_TITLE, t.getTitle());
-        args.putString(TERM_START, t.getStart());
-        args.putString(TERM_END, t.getEnd());
+        args.putString(TERM_START, t.getStart().split("T")[0]);
+        args.putString(TERM_END, t.getEnd().split("T")[0]);
         args.putInt(TERM_ID, t.getId());
         fragment.setArguments(args);
 

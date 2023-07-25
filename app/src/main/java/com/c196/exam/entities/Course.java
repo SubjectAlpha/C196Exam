@@ -55,6 +55,23 @@ public class Course {
         this.status = Statuses.PENDING.name();
     }
 
+    public Course(Integer id, String title, String start, String end, String status,
+                  String instructorFirstName, String instructorLastName, String instructorEmail,
+                  String instructorPhone, Integer termId, ArrayList<Assessment> assessments) {
+        this.id = id;
+        this.title = title;
+        this.start = start;
+        this.end = end;
+        this.status = status;
+        this.instructorFirstName = instructorFirstName;
+        this.instructorLastName = instructorLastName;
+        this.instructorEmail = instructorEmail;
+        this.instructorPhone = instructorPhone;
+        this.termId = termId;
+        this.assessments = assessments;
+        this.status = Statuses.PENDING.name();
+    }
+
     public String getTitle() {
         return title;
     }
