@@ -40,13 +40,4 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(ll.getId(), MainCardFragment.newInstance(t)).commit();
         }
     }
-
-    public void OpenTermActivity(String title, String start, String end, int id) {
-        Intent i = new Intent(MainActivity.this, TermActivity.class);
-        i.putExtra("title", title);
-        i.putExtra("start", start);
-        i.putExtra("end", end);
-        i.putExtra("id", id);
-        MainActivity.this.startActivity(i);
-    }
 }

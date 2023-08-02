@@ -1,5 +1,6 @@
 package com.c196.exam.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.c196.exam.MainActivity;
 import com.c196.exam.R;
+import com.c196.exam.TermActivity;
 import com.c196.exam.entities.Term;
 
 /**
@@ -90,8 +92,12 @@ public class MainCardFragment extends Fragment {
         endText.setText(termEnd);
 
         v.setOnClickListener((view) -> {
-            MainActivity ma = (MainActivity) getActivity();
-            ma.OpenTermActivity(termTitle, termStart, termEnd, termId);
+            Intent i = new Intent(this.requireContext(), TermActivity.class);
+            i.putExtra("title", termTitle);
+            i.putExtra("start", termStart);
+            i.putExtra("end", termEnd);
+            i.putExtra("id", termId);
+            getActivity().startActivity(i);
         });
 
         return v;

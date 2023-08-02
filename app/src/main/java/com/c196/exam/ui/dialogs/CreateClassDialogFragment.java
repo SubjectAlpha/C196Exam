@@ -69,6 +69,13 @@ public class CreateClassDialogFragment extends DialogFragment {
                     String startDateTime = "";
                     String endDateTime = "";
                     Toast t = new Toast(this.getContext());
+                    String courseName = className.getText().toString();
+                    String courseStatus = Course.Statuses.PENDING.name();
+                    String ciFName = instructorFirstName.getText().toString();
+                    String ciLName = instructorLastName.getText().toString();
+                    String ciEmail = instructorEmail.getText().toString();
+                    String ciPhone = instructorPhone.getText().toString();
+
                     try{
                         String startFormatted = startDate.getText().toString() + "T00:00:00Z";
                         String endFormatted = endDate.getText().toString() + "T00:00:00Z";
@@ -78,6 +85,13 @@ public class CreateClassDialogFragment extends DialogFragment {
                         if(startInstant.isAfter(endInstant)){
                             t.setText("The course can not start after it ends.");
                             t.show();
+                            return;
+                        }
+
+                        if(courseName.isEmpty() || ciFName.isEmpty() || ciLName.isEmpty() || ciEmail.isEmpty() || ciPhone.isEmpty() ){
+                            t.setText("You must fill out all fields.");
+                            t.show();
+                            return;
                         }
 
                         startDateTime = startInstant.toString();
@@ -86,18 +100,19 @@ public class CreateClassDialogFragment extends DialogFragment {
                     } catch (Exception ex){
                         t.setText("Please ensure your start and end dates are in yyyy-MM-dd format.");
                         t.show();
+                        return;
                     }
 
                     try{
                         Integer termId = this.getArguments().getInt("termId");
-                        Course c = new Course(className.getText().toString(),
+                        Course c = new Course(courseName,
                                 startDateTime,
                                 endDateTime,
-                                Course.Statuses.PENDING.name(),
-                                instructorFirstName.getText().toString(),
-                                instructorLastName.getText().toString(),
-                                instructorEmail.getText().toString(),
-                                instructorPhone.getText().toString(),
+                                courseStatus,
+                                ciFName,
+                                ciLName,
+                                ciEmail,
+                                ciPhone,
                                 termId,
                                 null);
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {

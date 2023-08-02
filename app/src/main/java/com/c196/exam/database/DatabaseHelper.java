@@ -32,40 +32,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String createCourseNoteQuery = "CREATE TABLE '%1$s' (" +
                 "'%2$s' INTEGER PRIMARY KEY, " +
-                "'%3$s' TEXT, '%4$s' NUMBER, FOREIGN KEY('%4$s') REFERENCES '%5$s'('%6$s'))";
+                "'%3$s' VARCHAR, '%4$s' NUMBER, FOREIGN KEY('%4$s') REFERENCES '%5$s'('%6$s'))";
+
+        String createAssessmentQuery = "CREATE TABLE '%1$s' (" +
+                "'%2$s' INTEGER PRIMARY KEY, " +
+                "'%3$s' VARCHAR, '%4$s' VARCHAR, '%5$s' BOOLEAN, '%6$s' NUMBER, FOREIGN KEY('%6$s') REFERENCES '%7$s'('%8$s'))";
 
         try{
             createTermsQuery = String.format(createTermsQuery,
-                                TermTable.NAME,
-                                TermTable._ID,
-                                TermTable.TITLE_COLUMN,
-                                TermTable.START_COLUMN,
-                                TermTable.END_COLUMN);
+                TermTable.NAME,
+                TermTable._ID,
+                TermTable.TITLE_COLUMN,
+                TermTable.START_COLUMN,
+                TermTable.END_COLUMN
+            );
 
             createCourseQuery = String.format(createCourseQuery,
-                    CourseTable.NAME,
-                    CourseTable._ID,
-                    CourseTable.TITLE,
-                    CourseTable.START,
-                    CourseTable.END,
-                    CourseTable.STATUS,
-                    CourseTable.TERM_ID,
-                    CourseTable.INSTRUCTOR_FIRST_NAME,
-                    CourseTable.INSTRUCTOR_LAST_NAME,
-                    CourseTable.INSTRUCTOR_EMAIL,
-                    CourseTable.INSTRUCTOR_PHONE,
-                    TermTable.NAME,
-                    TermTable._ID
-                    );
+                CourseTable.NAME,
+                CourseTable._ID,
+                CourseTable.TITLE,
+                CourseTable.START,
+                CourseTable.END,
+                CourseTable.STATUS,
+                CourseTable.TERM_ID,
+                CourseTable.INSTRUCTOR_FIRST_NAME,
+                CourseTable.INSTRUCTOR_LAST_NAME,
+                CourseTable.INSTRUCTOR_EMAIL,
+                CourseTable.INSTRUCTOR_PHONE,
+                TermTable.NAME,
+                TermTable._ID
+            );
 
             createCourseNoteQuery = String.format(createCourseNoteQuery,
-                    CourseNoteTable.NAME,
-                    CourseNoteTable._ID,
-                    CourseNoteTable.VALUE,
-                    CourseNoteTable.COURSE_ID,
-                    CourseTable.NAME,
-                    CourseTable._ID
-                    );
+                CourseNoteTable.NAME,
+                CourseNoteTable._ID,
+                CourseNoteTable.VALUE,
+                CourseNoteTable.COURSE_ID,
+                CourseTable.NAME,
+                CourseTable._ID
+            );
+
+            createAssessmentQuery = String.format(createAssessmentQuery,
+                AssessmentTable.NAME,
+                AssessmentTable._ID,
+                AssessmentTable.TITLE,
+                AssessmentTable.START,
+                AssessmentTable.END,
+                AssessmentTable.IS_PERFORMANCE,
+                AssessmentTable.COURSE_ID,
+                CourseTable.NAME,
+                CourseTable._ID
+            );
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -73,6 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTermsQuery);
         db.execSQL(createCourseQuery);
         db.execSQL(createCourseNoteQuery);
+        db.execSQL(createAssessmentQuery);
     }
 
     @Override
@@ -192,5 +210,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String NAME = "CourseNotes";
         public static final String COURSE_ID = "courseId";
         public static final String VALUE = "value";
+    }
+
+    private static class AssessmentTable implements BaseColumns {
+        public static final String NAME = "Assessments";
+        public static final String TITLE = "title";
+        public static final String START = "start";
+        public static final String END = "end";
+        public static final String IS_PERFORMANCE = "is_performance";
+        public static final String COURSE_ID = "courseId";
     }
 }

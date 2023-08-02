@@ -1,5 +1,6 @@
 package com.c196.exam.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.c196.exam.CourseActivity;
 import com.c196.exam.MainActivity;
 import com.c196.exam.R;
 import com.c196.exam.entities.Course;
@@ -74,7 +76,9 @@ public class TermCardFragment extends Fragment {
         endText.setText(courseEnd);
 
         v.setOnClickListener((view) -> {
-            System.out.println("derp");
+            Intent i = new Intent(getContext(), CourseActivity.class);
+            i.putExtra("courseId", );
+            getActivity().startActivity(i);
         });
 
         return v;
