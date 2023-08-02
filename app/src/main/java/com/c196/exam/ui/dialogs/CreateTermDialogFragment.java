@@ -48,23 +48,32 @@ public class CreateTermDialogFragment extends DialogFragment {
                 .setPositiveButton("Create", (dialog, id) -> {
                     String startDateTime = "";
                     String endDateTime = "";
+                    Toast t = new Toast(this.getContext());
                     try{
                         String start = startDate.getText().toString() + "T00:00:00Z";
                         String end = endDate.getText().toString() + "T00:00:00Z";
-                        startDateTime = Instant.parse(start).toString();
-                        endDateTime = Instant.parse(end).toString();
+                        Instant startInstant = Instant.parse(start);
+                        Instant endInstant = Instant.parse(end);
+
+                        if(startInstant.isAfter(endInstant)){
+                            t.setText("Please ensure your start and end dates are in yyyy-MM-dd format.");
+                            t.show();
+                        }
+
+                        startDateTime = startInstant.toString();
+                        endDateTime = endInstant.toString();
                     } catch (Exception ex){
-                        Toast t = new Toast(this.getContext());
+
                         t.setText("Please ensure your start and end dates are in yyyy-MM-dd format.");
                         t.show();
                     }
 
                     try{
-                        Term t = new Term(termName.getText().toString(), startDateTime, endDateTime);
+                        Term term = new Term(termName.getText().toString(), startDateTime, endDateTime);
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {
                             SQLiteDatabase db = dh.getWritableDatabase();
                             Log.d("INFO", "DB Open: " + db.isOpen());
-                            boolean result = dh.addTerm(t);
+                            boolean result = dh.addTerm(term);
                             Log.d("DB RESULT", "" + result);
                             db.close();
 
@@ -75,9 +84,11 @@ public class CreateTermDialogFragment extends DialogFragment {
                         }
                     } catch (Exception ex){
                         Log.e("EX", ex.getMessage());
+                        t.setText(ex.getMessage());
+                        t.show();
                     }
                 })
-                .setNegativeButton("Cancel", (DialogInterface.OnClickListener) (dialog, id) -> {
+                .setNegativeButton("Cancel", (dialog, id) -> {
                     CreateTermDialogFragment.this.getDialog().cancel();
                 });
         return builder.create();

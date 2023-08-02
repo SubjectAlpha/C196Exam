@@ -24,9 +24,15 @@ public class Course {
         this.status = Statuses.PENDING.name();
     }
 
-    public Course(String title, String start, String end, String status,
-                  String instructorFirstName, String instructorLastName, String instructorEmail,
-                  String instructorPhone, Integer termId) {
+    public Course(String title,
+                  String start,
+                  String end,
+                  String status,
+                  String instructorFirstName,
+                  String instructorLastName,
+                  String instructorEmail,
+                  String instructorPhone,
+                  Integer termId) {
         this.title = title;
         this.start = start;
         this.end = end;
@@ -159,6 +165,7 @@ public class Course {
     public enum Statuses {
         PENDING,
         IN_PROGRESS,
-        COMPLETE
+        COMPLETE,
+        DROPPED
     }
 }

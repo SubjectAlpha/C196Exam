@@ -13,12 +13,10 @@ public class DatePicker extends AppCompatEditText {
         super(context);
         setHint(hint);
 
-        this.setOnFocusChangeListener((v, hasFocus) -> {
-            openSelectDateFragment(manager);
-        });
-
-        this.setOnClickListener(v -> {
-            openSelectDateFragment(manager);
+        this.setOnFocusChangeListener((v,e) -> {
+            if(e){
+                openSelectDateFragment(manager);
+            }
         });
     }
 

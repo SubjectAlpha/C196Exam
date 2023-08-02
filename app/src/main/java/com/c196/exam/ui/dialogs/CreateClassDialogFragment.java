@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.textclassifier.TextClassifier;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -39,7 +40,6 @@ public class CreateClassDialogFragment extends DialogFragment {
         final EditText className = new EditText(this.requireContext());
         final DatePicker startDate = new DatePicker(this.requireContext(), this.getChildFragmentManager(), "Start Date");
         final DatePicker endDate = new DatePicker(this.requireContext(), this.getChildFragmentManager(), "End Date");
-        final EditText classNote = new EditText(this.requireContext());
         final EditText instructorFirstName = new EditText(this.requireContext());
         final EditText instructorLastName = new EditText(this.requireContext());
         final EditText instructorEmail = new EditText(this.requireContext());
@@ -71,20 +71,38 @@ public class CreateClassDialogFragment extends DialogFragment {
                 .setPositiveButton("Create", (dialog, id) -> {
                     String startDateTime = "";
                     String endDateTime = "";
+                    Toast t = new Toast(this.getContext());
                     try{
-                        String start = startDate.getText().toString() + "T00:00:00Z";
-                        String end = endDate.getText().toString() + "T00:00:00Z";
-                        startDateTime = Instant.parse(start).toString();
-                        endDateTime = Instant.parse(end).toString();
+                        String startFormatted = startDate.getText().toString() + "T00:00:00Z";
+                        String endFormatted = endDate.getText().toString() + "T00:00:00Z";
+                        Instant startInstant = Instant.parse(startFormatted);
+                        Instant endInstant = Instant.parse(endFormatted);
+
+                        if(startInstant.isAfter(endInstant)){
+                            t.setText("The course can not start after it ends.");
+                            t.show();
+                        }
+
+                        startDateTime = startInstant.toString();
+                        endDateTime = endInstant.toString();
+
                     } catch (Exception ex){
-                        Toast t = new Toast(this.getContext());
                         t.setText("Please ensure your start and end dates are in yyyy-MM-dd format.");
                         t.show();
                     }
 
                     try{
                         Integer termId = this.getArguments().getInt("termId");
-                        Course c = new Course(termId, className.getText().toString(), startDateTime, endDateTime);
+                        Course c = new Course(className.getText().toString(),
+                                startDateTime,
+                                endDateTime,
+                                Course.Statuses.PENDING.name(),
+                                instructorFirstName.getText().toString(),
+                                instructorLastName.getText().toString(),
+                                instructorEmail.getText().toString(),
+                                instructorPhone.getText().toString(),
+                                termId,
+                                null);
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {
                             SQLiteDatabase db = dh.getWritableDatabase();
                             Log.d("INFO", "DB Open: " + db.isOpen());
@@ -99,6 +117,8 @@ public class CreateClassDialogFragment extends DialogFragment {
                         }
                     } catch (Exception ex){
                         Log.e("EX", ex.getMessage());
+                        t.setText(ex.getMessage());
+                        t.show();
                     }
                 })
                 .setNegativeButton("Cancel", (dialog, id) -> {
