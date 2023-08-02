@@ -145,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return success;
     }
 
-    public boolean addCourse(Course c, String note) {
+    public boolean addCourse(Course c) {
         boolean success = false;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
