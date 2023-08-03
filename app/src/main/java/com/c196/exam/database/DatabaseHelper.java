@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import com.c196.exam.entities.Assessment;
 import com.c196.exam.entities.Course;
 import com.c196.exam.entities.Term;
 
@@ -132,12 +133,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int index = 0;
             do {
 
+                int courseIdIdx = c.getColumnIndex(CourseTable._ID);
                 int termIdIdx = c.getColumnIndex(CourseTable.TERM_ID);
                 int titleIdx = c.getColumnIndex(CourseTable.TITLE);
                 int startIdx = c.getColumnIndex(CourseTable.START);
                 int endIdx = c.getColumnIndex(CourseTable.END);
+                int statusIdx = c.getColumnIndex(CourseTable.STATUS);
+                int ciFNameIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_FIRST_NAME);
+                int ciLNameIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_LAST_NAME);
+                int ciEmailIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_EMAIL);
+                int ciPhoneIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_PHONE);
 
-                Course course = new Course(c.getInt(termIdIdx), c.getString(titleIdx), c.getString(startIdx), c.getString(endIdx));
+                ArrayList<Assessment> assessments = new ArrayList<>();
+
+                Course course = new Course(
+                        c.getInt(courseIdIdx),
+                        c.getString(titleIdx),
+                        c.getString(startIdx),
+                        c.getString(endIdx),
+                        c.getString(statusIdx),
+                        c.getString(ciFNameIdx),
+                        c.getString(ciLNameIdx),
+                        c.getString(ciEmailIdx),
+                        c.getString(ciPhoneIdx),
+                        c.getInt(termIdIdx),
+                        assessments
+                );
                 courseList.add(course);
                 index++;
             } while(c.move(index));

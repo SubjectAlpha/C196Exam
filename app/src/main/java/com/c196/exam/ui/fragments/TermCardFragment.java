@@ -34,7 +34,7 @@ public class TermCardFragment extends Fragment {
     private String courseTitle;
     private String courseStart;
     private String courseEnd;
-    private Integer termId;
+    private Integer courseId;
 
     public TermCardFragment() {
         // Required empty public constructor
@@ -59,7 +59,7 @@ public class TermCardFragment extends Fragment {
             courseTitle = getArguments().getString(COURSE_TITLE);
             courseStart = getArguments().getString(COURSE_START);
             courseEnd = getArguments().getString(COURSE_END);
-            termId = getArguments().getInt(COURSE_ID);
+            courseId = getArguments().getInt(COURSE_ID);
         }
     }
 
@@ -77,7 +77,7 @@ public class TermCardFragment extends Fragment {
 
         v.setOnClickListener((view) -> {
             Intent i = new Intent(getContext(), CourseActivity.class);
-            i.putExtra("courseId", );
+            i.putExtra("courseId", courseId);
             getActivity().startActivity(i);
         });
 
