@@ -2,6 +2,7 @@ package com.c196.exam.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.CharArrayBuffer;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -121,6 +122,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         c.close();
         return termList;
+    }
+
+    public Course getCourse(int id) {
+        Course course = null;
+        String query = "SELECT * FROM " + CourseTable.NAME + " WHERE " + CourseTable._ID +" = '%1$s';";
+        query = String.format(query, id);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(query, null);
+
+        if(c.moveToFirst()){
+
+            int courseIdIdx = c.getColumnIndex(CourseTable._ID);
+            int termIdIdx = c.getColumnIndex(CourseTable.TERM_ID);
+            int titleIdx = c.getColumnIndex(CourseTable.TITLE);
+            int startIdx = c.getColumnIndex(CourseTable.START);
+            int endIdx = c.getColumnIndex(CourseTable.END);
+            int statusIdx = c.getColumnIndex(CourseTable.STATUS);
+            int ciFNameIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_FIRST_NAME);
+            int ciLNameIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_LAST_NAME);
+            int ciEmailIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_EMAIL);
+            int ciPhoneIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_PHONE);
+
+            ArrayList<Assessment> assessments = new ArrayList<>();
+
+            try{
+                course = new Course(
+                    c.getInt(courseIdIdx),
+                    c.getString(titleIdx),
+                    c.getString(startIdx),
+                    c.getString(endIdx),
+                    c.getString(statusIdx),
+                    c.getString(ciFNameIdx),
+                    c.getString(ciLNameIdx),
+                    c.getString(ciEmailIdx),
+                    c.getString(ciPhoneIdx),
+                    c.getInt(termIdIdx),
+                    assessments
+                );
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+
+
+        }
+        c.close();
+        return course;
     }
 
     public ArrayList<Course> getCourses() {

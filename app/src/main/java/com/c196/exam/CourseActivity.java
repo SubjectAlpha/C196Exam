@@ -1,14 +1,69 @@
 package com.c196.exam;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.c196.exam.database.DatabaseHelper;
+import com.c196.exam.entities.Course;
+import com.google.android.material.tabs.TabLayout;
+
 public class CourseActivity extends AppCompatActivity {
+
+    TabLayout tabLayout;
+    ViewPager2 viewPager;
+    ViewPagerAdapter viewPagerAdapter;
+
+    Course course;
+
+    public Course getCourse() {
+        return course;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
+
+        tabLayout = findViewById(R.id.tablayout);
+        viewPager = findViewById(R.id.view_pager);
+        viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPager.setAdapter(viewPagerAdapter);
+
+        DatabaseHelper dbh = new DatabaseHelper(this);
+        Intent newIntent = getIntent();
+        Integer id = newIntent.getIntExtra("courseId", -1);
+        course = dbh.getCourse(id);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
+        myToolbar.setTitle(course.getTitle());
+        myToolbar.setSubtitle("Status: " + course.getStatus());
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabLayout.getTabAt(position).select();
+            }
+        });
     }
 }

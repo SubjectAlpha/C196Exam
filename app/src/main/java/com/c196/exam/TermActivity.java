@@ -24,7 +24,6 @@ public class TermActivity extends AppCompatActivity {
         DatabaseHelper dbh = new DatabaseHelper(this);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
-        setSupportActionBar(myToolbar);
 
         Intent newIntent = getIntent();
         String title = newIntent.getStringExtra("title");
