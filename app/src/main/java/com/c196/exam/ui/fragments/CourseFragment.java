@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.c196.exam.CourseActivity;
 import com.c196.exam.R;
 import com.c196.exam.entities.Course;
+import com.c196.exam.entities.CourseNote;
 import com.c196.exam.ui.dialogs.CreateClassDialogFragment;
 import com.c196.exam.ui.dialogs.CreateNoteDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,6 +23,7 @@ public class CourseFragment extends Fragment implements CourseActivity.FragmentL
     private TextView instructorFName;
     private TextView instructorEmail;
     private TextView instructorPhone;
+    private LinearLayout noteLayout;
     private Course course;
     public CourseFragment() {
         // Required empty public constructor
@@ -40,6 +43,7 @@ public class CourseFragment extends Fragment implements CourseActivity.FragmentL
         instructorFName = v.findViewById(R.id.instructorFName);
         instructorEmail = v.findViewById(R.id.instructorEmail);
         instructorPhone = v.findViewById(R.id.instructorPhone);
+        noteLayout = v.findViewById(R.id.noteLayout);
 
         CourseActivity act = (CourseActivity) getActivity();
         course = act.getCourse();
@@ -48,6 +52,16 @@ public class CourseFragment extends Fragment implements CourseActivity.FragmentL
         instructorPhone.setText("Phone: " + course.getInstructorPhone());
 
         ((CourseActivity)getActivity()).setFragmentListener(this);
+
+        if(course.getNotes() != null){
+            for(CourseNote note : course.getNotes()) {
+                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
+                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
+                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
+                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
+            }
+        }
+
 
         return v;
     }

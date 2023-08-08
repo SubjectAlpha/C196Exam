@@ -39,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String createAssessmentQuery = "CREATE TABLE '%1$s' (" +
                 "'%2$s' INTEGER PRIMARY KEY, " +
-                "'%3$s' VARCHAR, '%4$s' VARCHAR, '%5$s' BOOLEAN, '%6$s' NUMBER, FOREIGN KEY('%6$s') REFERENCES '%7$s'('%8$s'))";
+                "'%3$s' VARCHAR, '%4$s' VARCHAR, '%5$s' VARCHAR, '%6$s' BOOLEAN, '%7$s' INTEGER, FOREIGN KEY('%7$s') REFERENCES '%8$s'('%9$s'))";
 
         try{
             createTermsQuery = String.format(createTermsQuery,
@@ -99,11 +99,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String deleteTermsQuery = "DROP TABLE IF EXISTS " + TermTable.NAME;
-        String deleteCourseQuery = "DROP TABLE IF EXISTS " + CourseTable.NAME;
-
-        db.execSQL(deleteCourseQuery);
-        db.execSQL(deleteTermsQuery);
+        db.execSQL("DROP TABLE IF EXISTS " + TermTable.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CourseTable.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AssessmentTable.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CourseNoteTable.NAME);
 
         onCreate(db);
     }
@@ -128,11 +127,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Course getCourse(int id) {
         Course course = null;
-        String query = "SELECT * FROM " + CourseTable.NAME + " WHERE " + CourseTable._ID +" = '%1$s';";
-        query = String.format(query, id);
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(query, null);
+        Cursor c = db.rawQuery("SELECT * FROM " + CourseTable.NAME + " WHERE " +  CourseTable._ID + " = ?;", new String[] {String.valueOf(id)});
 
         if(c.moveToFirst()){
 
@@ -148,10 +145,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int ciPhoneIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_PHONE);
 
             ArrayList<Assessment> assessments = new ArrayList<>();
+            ArrayList<CourseNote> notes = new ArrayList<>();
+
+            Integer courseId = c.getInt(courseIdIdx);
+            Cursor assessmentCursor = db.rawQuery("SELECT * FROM " + AssessmentTable.NAME + " WHERE " + AssessmentTable.COURSE_ID + " = ?;", new String[] {String.valueOf(courseId)});
+            Cursor courseNoteCursor = db.rawQuery("SELECT * FROM " + CourseNoteTable.NAME + " WHERE " + CourseNoteTable.COURSE_ID + " = ?;", new String[] {String.valueOf(courseId)});
+
+            if(assessmentCursor.moveToFirst()) {
+                int index = 0;
+                do {
+
+                    index++;
+                } while(assessmentCursor.move(index));
+            }
+
+            if(courseNoteCursor.moveToFirst()) {
+                int idx = 0;
+                do {
+                    int noteTitleIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
+                    int noteContentIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
+                    int noteIdIdx = courseNoteCursor.getColumnIndex(CourseNoteTable._ID);
+
+                    notes.add(new CourseNote(
+                        courseNoteCursor.getInt(noteIdIdx),
+                        courseNoteCursor.getString(noteTitleIdx),
+                        courseNoteCursor.getString(noteContentIdx),
+                        courseId
+                    ));
+
+                    idx++;
+                } while(courseNoteCursor.move(idx));
+            }
 
             try{
                 course = new Course(
-                    c.getInt(courseIdIdx),
+                    courseId,
                     c.getString(titleIdx),
                     c.getString(startIdx),
                     c.getString(endIdx),
@@ -161,7 +189,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     c.getString(ciEmailIdx),
                     c.getString(ciPhoneIdx),
                     c.getInt(termIdIdx),
-                    assessments
+                    assessments,
+                    notes
                 );
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
@@ -177,43 +206,75 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Course> courseList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + CourseTable.NAME + ";", null);
+        Cursor courseCursor = db.rawQuery("SELECT * FROM " + CourseTable.NAME + ";", null);
 
-        if(c.moveToFirst()){
+        if(courseCursor.moveToFirst()){
             int index = 0;
             do {
 
-                int courseIdIdx = c.getColumnIndex(CourseTable._ID);
-                int termIdIdx = c.getColumnIndex(CourseTable.TERM_ID);
-                int titleIdx = c.getColumnIndex(CourseTable.TITLE);
-                int startIdx = c.getColumnIndex(CourseTable.START);
-                int endIdx = c.getColumnIndex(CourseTable.END);
-                int statusIdx = c.getColumnIndex(CourseTable.STATUS);
-                int ciFNameIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_FIRST_NAME);
-                int ciLNameIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_LAST_NAME);
-                int ciEmailIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_EMAIL);
-                int ciPhoneIdx = c.getColumnIndex(CourseTable.INSTRUCTOR_PHONE);
+                int courseIdIdx = courseCursor.getColumnIndex(CourseTable._ID);
+                int termIdIdx = courseCursor.getColumnIndex(CourseTable.TERM_ID);
+                int titleIdx = courseCursor.getColumnIndex(CourseTable.TITLE);
+                int startIdx = courseCursor.getColumnIndex(CourseTable.START);
+                int endIdx = courseCursor.getColumnIndex(CourseTable.END);
+                int statusIdx = courseCursor.getColumnIndex(CourseTable.STATUS);
+                int ciFNameIdx = courseCursor.getColumnIndex(CourseTable.INSTRUCTOR_FIRST_NAME);
+                int ciLNameIdx = courseCursor.getColumnIndex(CourseTable.INSTRUCTOR_LAST_NAME);
+                int ciEmailIdx = courseCursor.getColumnIndex(CourseTable.INSTRUCTOR_EMAIL);
+                int ciPhoneIdx = courseCursor.getColumnIndex(CourseTable.INSTRUCTOR_PHONE);
 
                 ArrayList<Assessment> assessments = new ArrayList<>();
+                ArrayList<CourseNote> notes = new ArrayList<>();
+
+                int courseId = courseCursor.getInt(courseIdIdx);
+                Cursor assessmentCursor = db.rawQuery("SELECT * FROM " + AssessmentTable.NAME + " WHERE " + AssessmentTable.COURSE_ID + " = ?;", new String[] {String.valueOf(courseId)});
+                Cursor courseNoteCursor = db.rawQuery("SELECT * FROM " + CourseNoteTable.NAME + " WHERE " + CourseNoteTable.COURSE_ID + " = ?;", new String[] {String.valueOf(courseId)});
+
+                if(assessmentCursor.moveToFirst()) {
+                    int idx = 0;
+                    do {
+                        assessments.add(new Assessment());
+                        idx++;
+                    } while(assessmentCursor.move(idx));
+                }
+
+                if(courseNoteCursor.moveToFirst()) {
+                    int idx = 0;
+                    do {
+                        int noteTitleIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
+                        int noteContentIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
+                        int noteIdIdx = courseNoteCursor.getColumnIndex(CourseNoteTable._ID);
+
+                        notes.add(new CourseNote(
+                            courseNoteCursor.getInt(noteIdIdx),
+                            courseNoteCursor.getString(noteTitleIdx),
+                            courseNoteCursor.getString(noteContentIdx),
+                            courseId
+                        ));
+
+                        idx++;
+                    } while(courseNoteCursor.move(idx));
+                }
 
                 Course course = new Course(
-                        c.getInt(courseIdIdx),
-                        c.getString(titleIdx),
-                        c.getString(startIdx),
-                        c.getString(endIdx),
-                        c.getString(statusIdx),
-                        c.getString(ciFNameIdx),
-                        c.getString(ciLNameIdx),
-                        c.getString(ciEmailIdx),
-                        c.getString(ciPhoneIdx),
-                        c.getInt(termIdIdx),
-                        assessments
+                        courseId,
+                        courseCursor.getString(titleIdx),
+                        courseCursor.getString(startIdx),
+                        courseCursor.getString(endIdx),
+                        courseCursor.getString(statusIdx),
+                        courseCursor.getString(ciFNameIdx),
+                        courseCursor.getString(ciLNameIdx),
+                        courseCursor.getString(ciEmailIdx),
+                        courseCursor.getString(ciPhoneIdx),
+                        courseCursor.getInt(termIdIdx),
+                        assessments,
+                        notes
                 );
                 courseList.add(course);
                 index++;
-            } while(c.move(index));
+            } while(courseCursor.move(index));
         }
-        c.close();
+        courseCursor.close();
         return courseList;
     }
 
@@ -263,6 +324,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(CourseNoteTable.TITLE, note.getTitle());
+        cv.put(CourseNoteTable.COURSE_ID, note.getCourseId());
+        cv.put(CourseNoteTable.CONTENT, note.getContent());
 
         long result = db.insert(CourseNoteTable.NAME, null, cv);
         if(result > 0){

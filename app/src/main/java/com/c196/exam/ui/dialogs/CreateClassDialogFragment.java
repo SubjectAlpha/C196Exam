@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -49,6 +50,7 @@ public class CreateClassDialogFragment extends DialogFragment {
         endDate.setInputType(InputType.TYPE_CLASS_DATETIME);
         instructorEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         instructorPhone.setInputType(InputType.TYPE_CLASS_PHONE);
+        instructorPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         className.setHint("Class name");
         instructorFirstName.setHint("Instructor First Name");
@@ -106,15 +108,16 @@ public class CreateClassDialogFragment extends DialogFragment {
                     try{
                         Integer termId = this.getArguments().getInt("termId");
                         Course c = new Course(courseName,
-                                startDateTime,
-                                endDateTime,
-                                courseStatus,
-                                ciFName,
-                                ciLName,
-                                ciEmail,
-                                ciPhone,
-                                termId,
-                                null);
+                            startDateTime,
+                            endDateTime,
+                            courseStatus,
+                            ciFName,
+                            ciLName,
+                            ciEmail,
+                            ciPhone,
+                            termId,
+                            null,
+                            null);
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {
                             SQLiteDatabase db = dh.getWritableDatabase();
                             Log.d("INFO", "DB Open: " + db.isOpen());

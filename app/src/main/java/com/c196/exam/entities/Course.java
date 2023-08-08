@@ -15,6 +15,7 @@ public class Course {
     private String instructorPhone;
     private Integer termId;
     private ArrayList<Assessment> assessments;
+    private ArrayList<CourseNote> notes;
 
     public Course(Integer termId, String title, String start, String end){
         this.termId = termId;
@@ -47,7 +48,7 @@ public class Course {
 
     public Course(String title, String start, String end, String status,
                   String instructorFirstName, String instructorLastName, String instructorEmail,
-                  String instructorPhone, Integer termId, ArrayList<Assessment> assessments) {
+                  String instructorPhone, Integer termId, ArrayList<Assessment> assessments, ArrayList<CourseNote> notes) {
         this.title = title;
         this.start = start;
         this.end = end;
@@ -58,12 +59,12 @@ public class Course {
         this.instructorPhone = instructorPhone;
         this.termId = termId;
         this.assessments = assessments;
-        this.status = Statuses.PENDING.name();
+        this.notes = notes;
     }
 
     public Course(Integer id, String title, String start, String end, String status,
                   String instructorFirstName, String instructorLastName, String instructorEmail,
-                  String instructorPhone, Integer termId, ArrayList<Assessment> assessments) {
+                  String instructorPhone, Integer termId, ArrayList<Assessment> assessments, ArrayList<CourseNote> notes) {
         this.id = id;
         this.title = title;
         this.start = start;
@@ -75,7 +76,7 @@ public class Course {
         this.instructorPhone = instructorPhone;
         this.termId = termId;
         this.assessments = assessments;
-        this.status = Statuses.PENDING.name();
+        this.notes = notes;
     }
 
     public String getTitle() {
@@ -160,6 +161,14 @@ public class Course {
 
     public int getId() {
         return id;
+    }
+
+    public ArrayList<CourseNote> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(ArrayList<CourseNote> notes) {
+        this.notes = notes;
     }
 
     public enum Statuses {
