@@ -12,8 +12,11 @@ import android.widget.TextView;
 import com.c196.exam.CourseActivity;
 import com.c196.exam.R;
 import com.c196.exam.entities.Course;
+import com.c196.exam.ui.dialogs.CreateClassDialogFragment;
+import com.c196.exam.ui.dialogs.CreateNoteDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class CourseFragment extends Fragment {
+public class CourseFragment extends Fragment implements CourseActivity.FragmentListener {
 
     private TextView instructorFName;
     private TextView instructorEmail;
@@ -44,6 +47,22 @@ public class CourseFragment extends Fragment {
         instructorEmail.setText("Email: " + course.getInstructorEmail());
         instructorPhone.setText("Phone: " + course.getInstructorPhone());
 
+        ((CourseActivity)getActivity()).setFragmentListener(this);
+
         return v;
+    }
+
+    @Override
+    public void addNote() {
+        CreateNoteDialogFragment noteDialogFragment = new CreateNoteDialogFragment();
+        Bundle b = new Bundle();
+        b.putInt("courseId", course.getId());
+        noteDialogFragment.setArguments(b);
+        noteDialogFragment.show(getChildFragmentManager(), CreateNoteDialogFragment.TAG);
+    }
+
+    @Override
+    public void addAssessment() {
+
     }
 }

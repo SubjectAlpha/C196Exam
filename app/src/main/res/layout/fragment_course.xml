@@ -2,51 +2,46 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/courseFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.CourseFragment">
 
     <TextView
-        android:layout_width="254dp"
-        android:layout_height="75dp"
-        android:textAlignment="center"
+        android:id="@+id/textView"
+        android:layout_width="258dp"
+        android:layout_height="19dp"
         android:text="Your Instructor's Information"
-        app:layout_constraintBottom_toTopOf="@+id/instructorFName"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/instructorFName"
-        android:layout_width="254dp"
-        android:layout_height="75dp"
+        android:layout_width="411dp"
+        android:layout_height="43dp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/instructorEmail"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/instructorEmail"
-        android:layout_width="254dp"
-        android:layout_height="75dp"
+        android:layout_width="198dp"
+        android:layout_height="49dp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/instructorPhone"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/instructorPhone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instructorFName" />
 
     <TextView
         android:id="@+id/instructorPhone"
-        android:layout_width="254dp"
-        android:layout_height="75dp"
+        android:layout_width="208dp"
+        android:layout_height="47dp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:layout_constraintTop_toBottomOf="@+id/instructorFName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

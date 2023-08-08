@@ -10,6 +10,7 @@ import android.provider.BaseColumns;
 
 import com.c196.exam.entities.Assessment;
 import com.c196.exam.entities.Course;
+import com.c196.exam.entities.CourseNote;
 import com.c196.exam.entities.Term;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String createCourseNoteQuery = "CREATE TABLE '%1$s' (" +
                 "'%2$s' INTEGER PRIMARY KEY, " +
-                "'%3$s' VARCHAR, '%4$s' NUMBER, FOREIGN KEY('%4$s') REFERENCES '%5$s'('%6$s'))";
+                "'%3$s' VARCHAR, '%4$s' VARCHAR, '%5$s' NUMBER, FOREIGN KEY('%5$s') REFERENCES '%6$s'('%7$s'))";
 
         String createAssessmentQuery = "CREATE TABLE '%1$s' (" +
                 "'%2$s' INTEGER PRIMARY KEY, " +
@@ -68,7 +69,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             createCourseNoteQuery = String.format(createCourseNoteQuery,
                 CourseNoteTable.NAME,
                 CourseNoteTable._ID,
-                CourseNoteTable.VALUE,
+                CourseNoteTable.TITLE,
+                CourseNoteTable.CONTENT,
                 CourseNoteTable.COURSE_ID,
                 CourseTable.NAME,
                 CourseTable._ID
@@ -255,6 +257,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return success;
     }
 
+    public boolean addCourseNote(CourseNote note) {
+        boolean success = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(CourseNoteTable.TITLE, note.getTitle());
+
+        long result = db.insert(CourseNoteTable.NAME, null, cv);
+        if(result > 0){
+            success = true;
+        }
+
+        return success;
+    }
+
     private static class TermTable implements BaseColumns {
         public static final String NAME = "Terms";
         public static final String TITLE_COLUMN = "title";
@@ -278,7 +295,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static class CourseNoteTable implements BaseColumns {
         public static final String NAME = "CourseNotes";
         public static final String COURSE_ID = "courseId";
-        public static final String VALUE = "value";
+        public static final String TITLE = "title";
+        public static final String CONTENT = "content";
     }
 
     private static class AssessmentTable implements BaseColumns {

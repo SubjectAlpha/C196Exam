@@ -9,13 +9,18 @@ import android.os.Bundle;
 
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Course;
+import com.c196.exam.ui.dialogs.CreateClassDialogFragment;
+import com.c196.exam.ui.dialogs.CreateNoteDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class CourseActivity extends AppCompatActivity {
 
+    FragmentListener fragmentListener;
     TabLayout tabLayout;
     ViewPager2 viewPager;
     ViewPagerAdapter viewPagerAdapter;
+    FloatingActionButton fab;
 
     Course course;
 
@@ -30,6 +35,7 @@ public class CourseActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tablayout);
         viewPager = findViewById(R.id.view_pager);
+
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager.setAdapter(viewPagerAdapter);
 
@@ -65,5 +71,24 @@ public class CourseActivity extends AppCompatActivity {
                 tabLayout.getTabAt(position).select();
             }
         });
+
+        fab = findViewById(R.id.dynamicFab);
+        fab.setOnClickListener((view) -> {
+            switch (viewPager.getCurrentItem()) {
+                case 0:
+                    fragmentListener.addNote();
+                case 1:
+                    fragmentListener.addAssessment();
+            }
+        });
+    }
+
+    public interface FragmentListener {
+        void addNote();
+        void addAssessment();
+    }
+
+    public void setFragmentListener(FragmentListener listener) {
+        fragmentListener = listener;
     }
 }
