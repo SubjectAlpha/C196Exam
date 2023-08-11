@@ -56,9 +56,6 @@ public class CourseFragment extends Fragment implements CourseActivity.FragmentL
         if(course.getNotes() != null){
             for(CourseNote note : course.getNotes()) {
                 getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
-                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
-                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
-                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
             }
         }
 
