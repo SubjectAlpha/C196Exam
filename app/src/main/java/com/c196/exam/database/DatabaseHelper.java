@@ -114,12 +114,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM " + TermTable.NAME + ";", null);
 
         if(c.moveToFirst()){
-            int index = 0;
+            int index = 1;
             do {
                 Term t = new Term(c.getInt(0), c.getString(1), c.getString(2), c.getString(3));
                 t.setCourses(getCourses(t.getId()));
                 termList.add(t);
-                index++;
             } while(c.move(index));
         }
         c.close();
@@ -153,15 +152,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Cursor courseNoteCursor = db.rawQuery("SELECT * FROM " + CourseNoteTable.NAME + " WHERE " + CourseNoteTable.COURSE_ID + " = ?;", new String[] {String.valueOf(courseId)});
 
             if(assessmentCursor.moveToFirst()) {
-                int index = 0;
+                int index = 1;
                 do {
 
-                    index++;
+                    assessmentCursor.close();
                 } while(assessmentCursor.move(index));
             }
 
             if(courseNoteCursor.moveToFirst()) {
-                int idx = 0;
+                int idx = 1;
                 do {
                     int noteTitleIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
                     int noteContentIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
@@ -174,7 +173,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         courseId
                     ));
 
-                    idx++;
                 } while(courseNoteCursor.move(idx));
             }
 
@@ -207,10 +205,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Course> courseList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor courseCursor = db.rawQuery("SELECT * FROM " + CourseTable.NAME + " WHERE " +  CourseTable._ID + " = ?;", new String[] {String.valueOf(termId)});
+        Cursor courseCursor = db.rawQuery("SELECT * FROM " + CourseTable.NAME + " WHERE " +  CourseTable.TERM_ID + " = ?;", new String[] {String.valueOf(termId)});
 
         if(courseCursor.moveToFirst()){
-            int index = 0;
+            int index = 1;
             do {
 
                 int courseIdIdx = courseCursor.getColumnIndex(CourseTable._ID);
@@ -232,15 +230,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Cursor courseNoteCursor = db.rawQuery("SELECT * FROM " + CourseNoteTable.NAME + " WHERE " + CourseNoteTable.COURSE_ID + " = ?;", new String[] {String.valueOf(courseId)});
 
                 if(assessmentCursor.moveToFirst()) {
-                    int idx = 0;
+                    int idx = 1;
                     do {
                         assessments.add(new Assessment());
-                        idx++;
                     } while(assessmentCursor.move(idx));
+                    assessmentCursor.close();
                 }
 
                 if(courseNoteCursor.moveToFirst()) {
-                    int idx = 0;
+                    int idx = 1;
                     do {
                         int noteTitleIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
                         int noteContentIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
@@ -253,8 +251,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             courseId
                         ));
 
-                        idx++;
                     } while(courseNoteCursor.move(idx));
+                    courseNoteCursor.close();
                 }
 
                 Course course = new Course(
@@ -272,7 +270,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         notes
                 );
                 courseList.add(course);
-                index++;
             } while(courseCursor.move(index));
         }
         courseCursor.close();
@@ -342,6 +339,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(CourseTable.INSTRUCTOR_PHONE, c.getInstructorPhone());
 
         long result = db.insert(CourseTable.NAME, null, cv);
+        if(result > 0){
+            success = true;
+        }
+
+        return success;
+    }
+
+    public boolean updateCourse(Course c) {
+        boolean success = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(CourseTable.TITLE, c.getTitle());
+        cv.put(CourseTable.START, c.getStart());
+        cv.put(CourseTable.END, c.getEnd());
+        cv.put(CourseTable.TERM_ID, c.getTermId());
+        cv.put(CourseTable.STATUS, c.getStatus());
+        cv.put(CourseTable.INSTRUCTOR_FIRST_NAME, c.getInstructorFirstName());
+        cv.put(CourseTable.INSTRUCTOR_LAST_NAME, c.getInstructorLastName());
+        cv.put(CourseTable.INSTRUCTOR_EMAIL, c.getInstructorEmail());
+        cv.put(CourseTable.INSTRUCTOR_PHONE, c.getInstructorPhone());
+        String x = String.valueOf(c.getId());
+        long result = db.update(CourseTable.NAME,
+                cv, CourseTable._ID + "=?",
+                new String[]{x});
+
+        if(result > 0){
+            success = true;
+        }
+
+        return success;
+    }
+
+    public boolean deleteCourse(int id) {
+        boolean success = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long result = db.delete(CourseTable.NAME,
+                CourseTable._ID + "=?",
+                new String[]{String.valueOf(id)
+        });
+
         if(result > 0){
             success = true;
         }

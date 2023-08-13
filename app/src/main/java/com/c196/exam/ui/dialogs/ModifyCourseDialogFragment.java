@@ -66,8 +66,8 @@ public class ModifyCourseDialogFragment extends DialogFragment {
         instructorPhone.setHint("Instructor Phone Number");
 
         className.setText(COURSE.getTitle());
-        startDate.setText(COURSE.getStart());
-        endDate.setText(COURSE.getEnd());
+        startDate.setText(COURSE.getStart().split("T")[0]);
+        endDate.setText(COURSE.getEnd().split("T")[0]);
         instructorFirstName.setText(COURSE.getInstructorFirstName());
         instructorLastName.setText(COURSE.getInstructorLastName());
         instructorEmail.setText(COURSE.getInstructorEmail());
@@ -77,17 +77,19 @@ public class ModifyCourseDialogFragment extends DialogFragment {
         deleteButton.setBackgroundColor(Color.RED);
         deleteButton.setOnClickListener((v) -> {
             try(DatabaseHelper dbh = new DatabaseHelper(this.getContext())){
-                boolean result = false; //dbh.deleteCourse();
+                boolean result = dbh.deleteCourse(COURSE.getId());
                 dbh.close();
                 if(result){
                     //Reload activity
                     Activity activity = getActivity();
                     activity.finish();
                     activity.startActivity(this.getActivity().getIntent());
+                }else{
+                    Toast t = new Toast(this.getContext());
+                    t.setText("Delete failed! Please try again.");
+                    t.show();
                 }
-                Toast t = new Toast(this.getContext());
-                t.setText("Delete failed! Verify there are no attached courses and try again.");
-                t.show();
+
 
             }catch(Exception ex) {
                 Toast t = new Toast(this.getContext());
@@ -147,8 +149,9 @@ public class ModifyCourseDialogFragment extends DialogFragment {
                     }
 
                     try{
-                        Integer termId = this.getArguments().getInt("termId");
-                        Course c = new Course(courseName,
+                        Course c = new Course(
+                            COURSE.getId(),
+                            courseName,
                             startDateTime,
                             endDateTime,
                             courseStatus,
@@ -156,13 +159,12 @@ public class ModifyCourseDialogFragment extends DialogFragment {
                             ciLName,
                             ciEmail,
                             ciPhone,
-                            termId,
+                            COURSE.getTermId(),
                             null,
                             null);
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {
                             SQLiteDatabase db = dh.getWritableDatabase();
-                            Log.d("INFO", "DB Open: " + db.isOpen());
-                            boolean result = dh.addCourse(c);
+                            boolean result = dh.updateCourse(c);
                             Log.d("DB RESULT", "" + result);
                             db.close();
 
@@ -170,6 +172,8 @@ public class ModifyCourseDialogFragment extends DialogFragment {
                             Activity activity = getActivity();
                             activity.finish();
                             activity.startActivity(this.getActivity().getIntent());
+                        }catch(Exception exx){
+                            Log.e("EX", exx.getMessage());
                         }
                     } catch (Exception ex){
                         Log.e("EX", ex.getMessage());
