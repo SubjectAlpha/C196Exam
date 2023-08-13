@@ -18,8 +18,8 @@ public class NotificationHandler {
         channel.setDescription(description);
         // Register the channel with the system. You can't change the importance
         // or other notification behaviors after this.
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
+        //NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        //notificationManager.createNotificationChannel(channel);
 
     }
 

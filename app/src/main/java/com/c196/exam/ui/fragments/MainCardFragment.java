@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.c196.exam.MainActivity;
 import com.c196.exam.R;
 import com.c196.exam.TermActivity;
 import com.c196.exam.entities.Term;
+import com.c196.exam.ui.dialogs.CreateTermDialogFragment;
+import com.c196.exam.ui.dialogs.ModifyTermDialogFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,6 +101,12 @@ public class MainCardFragment extends Fragment {
             i.putExtra("end", termEnd);
             i.putExtra("id", termId);
             getActivity().startActivity(i);
+        });
+
+        v.setOnLongClickListener((view) -> {
+            ModifyTermDialogFragment modifyTermDialogFragment = new ModifyTermDialogFragment(termId, termTitle, termStart, termEnd);
+            modifyTermDialogFragment.show(this.getChildFragmentManager(), ModifyTermDialogFragment.TAG);
+            return true;
         });
 
         return v;

@@ -48,7 +48,7 @@ public class TermActivity extends AppCompatActivity {
 
         LinearLayout ll = findViewById(R.id.main_layout);
 
-        for ( Course c : dbh.getCourses() ) {
+        for ( Course c : dbh.getCourses(id) ) {
             getSupportFragmentManager().beginTransaction().add(ll.getId(), TermCardFragment.newInstance(c)).commit();
         }
     }

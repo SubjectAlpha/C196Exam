@@ -31,15 +31,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String createCourseQuery = "CREATE TABLE '%1$s' ( " +
                 "'%2$s' INTEGER PRIMARY KEY, '%3$s' TEXT, '%4$s' VARCHAR, '%5$s' VARCHAR, " +
                 "'%6$s' TEXT, '%7$s' NUMBER, '%8$s' VARCHAR, '%9$s' VARCHAR, '%10$s' VARCHAR, " +
-                "'%11$s' VARCHAR, FOREIGN KEY('%7$s') REFERENCES '%12$s'('%13$s'))";
+                "'%11$s' VARCHAR, FOREIGN KEY('%7$s') REFERENCES '%12$s'('%13$s') ON DELETE RESTRICT ON UPDATE CASCADE)";
 
         String createCourseNoteQuery = "CREATE TABLE '%1$s' (" +
                 "'%2$s' INTEGER PRIMARY KEY, " +
-                "'%3$s' VARCHAR, '%4$s' VARCHAR, '%5$s' NUMBER, FOREIGN KEY('%5$s') REFERENCES '%6$s'('%7$s'))";
+                "'%3$s' VARCHAR, '%4$s' VARCHAR, '%5$s' NUMBER, FOREIGN KEY('%5$s') REFERENCES '%6$s'('%7$s') ON DELETE CASCADE ON UPDATE CASCADE)";
 
         String createAssessmentQuery = "CREATE TABLE '%1$s' (" +
                 "'%2$s' INTEGER PRIMARY KEY, " +
-                "'%3$s' VARCHAR, '%4$s' VARCHAR, '%5$s' VARCHAR, '%6$s' BOOLEAN, '%7$s' INTEGER, FOREIGN KEY('%7$s') REFERENCES '%8$s'('%9$s'))";
+                "'%3$s' VARCHAR, '%4$s' VARCHAR, '%5$s' VARCHAR, '%6$s' BOOLEAN, '%7$s' INTEGER, FOREIGN KEY('%7$s') REFERENCES '%8$s'('%9$s') ON DELETE CASCADE ON UPDATE CASCADE)";
 
         try{
             createTermsQuery = String.format(createTermsQuery,
@@ -117,6 +117,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int index = 0;
             do {
                 Term t = new Term(c.getInt(0), c.getString(1), c.getString(2), c.getString(3));
+                t.setCourses(getCourses(t.getId()));
                 termList.add(t);
                 index++;
             } while(c.move(index));
@@ -202,11 +203,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return course;
     }
 
-    public ArrayList<Course> getCourses() {
+    public ArrayList<Course> getCourses(int termId) {
         ArrayList<Course> courseList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor courseCursor = db.rawQuery("SELECT * FROM " + CourseTable.NAME + ";", null);
+        Cursor courseCursor = db.rawQuery("SELECT * FROM " + CourseTable.NAME + " WHERE " +  CourseTable._ID + " = ?;", new String[] {String.valueOf(termId)});
 
         if(courseCursor.moveToFirst()){
             int index = 0;
@@ -292,6 +293,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(result > 0){
             success = true;
         }
+        return success;
+    }
+
+    public boolean updateTerm(Term t) {
+        boolean success = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(TermTable.TITLE_COLUMN, t.getTitle());
+        cv.put(TermTable.START_COLUMN, t.getStart());
+        cv.put(TermTable.END_COLUMN, t.getEnd());
+        long result = db.update(TermTable.NAME, cv, TermTable._ID + "=?", new String[]{String.valueOf(t.getId())});
+        if(result > 0){
+            success = true;
+        }
+        return success;
+    }
+
+    public boolean deleteTerm(int id) {
+        boolean success = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT " + CourseTable._ID + " FROM " + CourseTable.NAME + " WHERE " + CourseTable.TERM_ID + "=?", new String[]{String.valueOf(id)});
+        int courseCount = c.getCount();
+
+        if(courseCount <= 0) {
+            long result = db.delete(TermTable.NAME, TermTable._ID + "=?", new String[]{String.valueOf(id)});
+            if(result > 0){
+                success = true;
+            }
+        }
+
         return success;
     }
 

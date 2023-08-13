@@ -12,8 +12,11 @@ import androidx.fragment.app.Fragment;
 import com.c196.exam.CourseActivity;
 import com.c196.exam.MainActivity;
 import com.c196.exam.R;
+import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Course;
 import com.c196.exam.entities.Term;
+import com.c196.exam.ui.dialogs.ModifyCourseDialogFragment;
+import com.c196.exam.ui.dialogs.ModifyTermDialogFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,6 +82,18 @@ public class TermCardFragment extends Fragment {
             Intent i = new Intent(getContext(), CourseActivity.class);
             i.putExtra("courseId", courseId);
             getActivity().startActivity(i);
+        });
+
+        v.setOnLongClickListener((view) -> {
+            Course c;
+            try(DatabaseHelper dbh = new DatabaseHelper(this.requireContext())) {
+                c = dbh.getCourse(courseId);
+            }catch (Exception e) {
+                c = null;
+            }
+            ModifyCourseDialogFragment modifyCourseDialogFragment = new ModifyCourseDialogFragment(c);
+            modifyCourseDialogFragment.show(this.getChildFragmentManager(), ModifyCourseDialogFragment.TAG);
+            return true;
         });
 
         return v;
