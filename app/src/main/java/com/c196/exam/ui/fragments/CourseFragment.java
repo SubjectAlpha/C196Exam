@@ -18,6 +18,8 @@ import com.c196.exam.ui.dialogs.CreateClassDialogFragment;
 import com.c196.exam.ui.dialogs.CreateNoteDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 public class CourseFragment extends Fragment implements CourseActivity.FragmentListener {
 
     private TextView instructorFName;
@@ -46,19 +48,15 @@ public class CourseFragment extends Fragment implements CourseActivity.FragmentL
         noteLayout = v.findViewById(R.id.noteLayout);
 
         CourseActivity act = (CourseActivity) getActivity();
+        act.setFragmentListener(this);
         course = act.getCourse();
         instructorFName.setText(course.getInstructorFirstName() + " " + course.getInstructorLastName());
         instructorEmail.setText("Email: " + course.getInstructorEmail());
         instructorPhone.setText("Phone: " + course.getInstructorPhone());
 
-        ((CourseActivity)getActivity()).setFragmentListener(this);
-
-        if(course.getNotes() != null){
-            for(CourseNote note : course.getNotes()) {
-                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
-            }
+        for(CourseNote note : course.getNotes()) {
+            getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
         }
-
 
         return v;
     }

@@ -163,7 +163,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int idx = 1;
                 do {
                     int noteTitleIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
-                    int noteContentIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
+                    int noteContentIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.CONTENT);
                     int noteIdIdx = courseNoteCursor.getColumnIndex(CourseNoteTable._ID);
 
                     notes.add(new CourseNote(
@@ -241,16 +241,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     int idx = 1;
                     do {
                         int noteTitleIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
-                        int noteContentIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.TITLE);
+                        int noteContentIdx = courseNoteCursor.getColumnIndex(CourseNoteTable.CONTENT);
                         int noteIdIdx = courseNoteCursor.getColumnIndex(CourseNoteTable._ID);
 
                         notes.add(new CourseNote(
-                            courseNoteCursor.getInt(noteIdIdx),
-                            courseNoteCursor.getString(noteTitleIdx),
-                            courseNoteCursor.getString(noteContentIdx),
-                            courseId
+                                courseNoteCursor.getInt(noteIdIdx),
+                                courseNoteCursor.getString(noteTitleIdx),
+                                courseNoteCursor.getString(noteContentIdx),
+                                courseId
                         ));
-
                     } while(courseNoteCursor.move(idx));
                     courseNoteCursor.close();
                 }

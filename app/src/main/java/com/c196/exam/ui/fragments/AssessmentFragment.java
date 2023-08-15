@@ -10,12 +10,16 @@ import android.view.ViewGroup;
 
 import com.c196.exam.CourseActivity;
 import com.c196.exam.R;
+import com.c196.exam.entities.Assessment;
+import com.c196.exam.entities.Course;
+import com.c196.exam.ui.dialogs.CreateAssessmentDialogFragment;
+import com.c196.exam.ui.dialogs.CreateNoteDialogFragment;
+
+import java.util.ArrayList;
 
 public class AssessmentFragment extends Fragment implements CourseActivity.FragmentListener {
 
-    private String mParam1;
-    private String mParam2;
-
+    Course course;
     public AssessmentFragment() {
         // Required empty public constructor
     }
@@ -24,6 +28,13 @@ public class AssessmentFragment extends Fragment implements CourseActivity.Fragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        CourseActivity act = (CourseActivity) getActivity();
+        act.setFragmentListener(this);
+        course = act.getCourse();
+
+        for(Assessment assessment : course.getAssessments()) {
+
+        }
     }
 
     @Override
@@ -38,6 +49,10 @@ public class AssessmentFragment extends Fragment implements CourseActivity.Fragm
 
     @Override
     public void addAssessment() {
-
+        CreateAssessmentDialogFragment createAssessmentDialogFragment = new CreateAssessmentDialogFragment();
+        Bundle b = new Bundle();
+        b.putInt("courseId", course.getId());
+        createAssessmentDialogFragment.setArguments(b);
+        createAssessmentDialogFragment.show(getChildFragmentManager(), CreateNoteDialogFragment.TAG);
     }
 }

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -17,13 +16,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.CourseNote;
-import com.c196.exam.entities.Term;
-import com.c196.exam.ui.widgets.DatePicker;
 
-import java.time.Instant;
-
-public class CreateNoteDialogFragment extends DialogFragment {
-    public static String TAG = "CreateNoteDialog";
+public class CreateAssessmentDialogFragment extends DialogFragment {
+    public static String TAG = "CreateAssessmentDialog";
 
     @Override
     public void onViewCreated(@NonNull View v, Bundle savedInstanceState) { }
@@ -41,7 +36,7 @@ public class CreateNoteDialogFragment extends DialogFragment {
         content.setHint("Note content");
         layout.addView(title);
         layout.addView(content);
-        builder.setTitle("Create a new note");
+        builder.setTitle("Create a new assessment");
         builder.setView(layout)
                 // Add action button validates the start/end dates before and after conversion
                 .setPositiveButton("Create", (dialog, id) -> {
@@ -69,7 +64,7 @@ public class CreateNoteDialogFragment extends DialogFragment {
                     }
                 })
                 .setNegativeButton("Cancel", (dialog, id) -> {
-                    CreateNoteDialogFragment.this.getDialog().cancel();
+                    CreateAssessmentDialogFragment.this.getDialog().cancel();
                 });
         return builder.create();
     }

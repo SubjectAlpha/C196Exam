@@ -165,7 +165,6 @@ public class ModifyCourseDialogFragment extends DialogFragment {
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {
                             SQLiteDatabase db = dh.getWritableDatabase();
                             boolean result = dh.updateCourse(c);
-                            Log.d("DB RESULT", "" + result);
                             db.close();
 
                             //Reload activity

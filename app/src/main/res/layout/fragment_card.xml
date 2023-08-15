@@ -23,15 +23,25 @@
             android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:textColor="@color/black" />
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:translationY="-15dp" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="165dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:translationY="10dp" />
 
         <TextView
             android:id="@+id/start"
             android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:textColor="@color/black" />
 
         <TextView
