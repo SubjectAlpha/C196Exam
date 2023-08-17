@@ -231,8 +231,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 if(assessmentCursor.moveToFirst()) {
                     int idx = 1;
+                    int assessmentIdIdx = assessmentCursor.getColumnIndex(AssessmentTable._ID);
+                    int assessmentTitleIdx = assessmentCursor.getColumnIndex(AssessmentTable.TITLE);
+                    int assessmentStartIdx = assessmentCursor.getColumnIndex(AssessmentTable.START);
+                    int assessmentEndIdx = assessmentCursor.getColumnIndex(AssessmentTable.END);
+                    int performanceIdx = assessmentCursor.getColumnIndex(AssessmentTable.IS_PERFORMANCE);
+
                     do {
-                        assessments.add(new Assessment());
+                        int isPerformance = assessmentCursor.getInt(performanceIdx);
+                        boolean isPerf = false;
+
+                        if(isPerformance == 1){
+                            isPerf = true;
+                        }
+
+                        assessments.add(new Assessment(
+                                assessmentCursor.getInt(assessmentIdIdx),
+                                assessmentCursor.getString(assessmentTitleIdx),
+                                assessmentCursor.getString(assessmentStartIdx),
+                                assessmentCursor.getString(assessmentEndIdx),
+                                isPerf,
+                                courseId
+                        ));
                     } while(assessmentCursor.move(idx));
                     assessmentCursor.close();
                 }
@@ -397,6 +417,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(CourseNoteTable.CONTENT, note.getContent());
 
         long result = db.insert(CourseNoteTable.NAME, null, cv);
+        if(result > 0){
+            success = true;
+        }
+
+        return success;
+    }
+
+    public boolean addAssessment(Assessment assessment){
+        boolean success = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(AssessmentTable.TITLE, assessment.getTitle());
+        cv.put(AssessmentTable.START, assessment.getStart());
+        cv.put(AssessmentTable.END, assessment.getEnd());
+        cv.put(AssessmentTable.COURSE_ID, assessment.getCourseId());
+
+        long result = db.insert(AssessmentTable.NAME, null, cv);
+        if(result > 0){
+            success = true;
+        }
+
+        return success;
+    }
+
+    public boolean modifyAssessment(Assessment assessment) {
+        boolean success = false;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(AssessmentTable.TITLE, assessment.getTitle());
+        cv.put(AssessmentTable.START, assessment.getStart());
+        cv.put(AssessmentTable.END, assessment.getEnd());
+        cv.put(AssessmentTable.COURSE_ID, assessment.getCourseId());
+
+        long result = db.update(AssessmentTable.NAME,cv,
+                AssessmentTable._ID + "=?",
+                new String[]{String.valueOf(assessment.getId())
+                });
+        if(result > 0){
+            success = true;
+        }
+
+        return success;
+    }
+
+    public boolean deleteAssessment(int id) {
+        boolean success = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long result = db.delete(AssessmentTable.NAME,
+                AssessmentTable._ID + "=?",
+                new String[]{String.valueOf(id)
+                });
+
         if(result > 0){
             success = true;
         }

@@ -9,13 +9,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.c196.exam.R;
 import com.c196.exam.database.DatabaseHelper;
+import com.c196.exam.entities.Assessment;
 import com.c196.exam.entities.CourseNote;
+import com.c196.exam.ui.widgets.DatePicker;
 
 public class CreateAssessmentDialogFragment extends DialogFragment {
     public static String TAG = "CreateAssessmentDialog";
@@ -31,11 +36,19 @@ public class CreateAssessmentDialogFragment extends DialogFragment {
         LinearLayout layout = new LinearLayout(this.getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
         final EditText title = new EditText(this.getContext());
-        final EditText content = new EditText(this.getContext());
+        final EditText start = new DatePicker(this.getContext(), this.getChildFragmentManager(), "Start Date");
+        final EditText end = new DatePicker(this.getContext(), this.getChildFragmentManager(), "End Date");
+        final RadioGroup radioGroup = new RadioGroup(this.getContext());
+        final RadioButton performanceButton = new RadioButton(this.getContext());
+        final RadioButton objectiveButton = new RadioButton(this.getContext());
+        performanceButton.setText("Performance Assessment");
+        objectiveButton.setText("Objective Assessment");
+        radioGroup.addView(performanceButton);
+        radioGroup.addView(objectiveButton);
+
         title.setHint("Note Subject");
-        content.setHint("Note content");
         layout.addView(title);
-        layout.addView(content);
+        layout.addView(radioGroup);
         builder.setTitle("Create a new assessment");
         builder.setView(layout)
                 // Add action button validates the start/end dates before and after conversion
@@ -44,12 +57,15 @@ public class CreateAssessmentDialogFragment extends DialogFragment {
 
                     try{
                         Integer courseId = this.getArguments().getInt("courseId");
-                        CourseNote note = new CourseNote(title.getText().toString(), content.getText().toString(), courseId);
+                        boolean isPerformance = performanceButton.isSelected();
+                        Assessment a = new Assessment(
+                                title.getText().toString(),
+                                start.getText().toString(),
+                                end.getText().toString(),
+                                isPerformance, courseId);
                         try (DatabaseHelper dh = new DatabaseHelper(getContext())) {
                             SQLiteDatabase db = dh.getWritableDatabase();
-                            Log.d("INFO", "DB Open: " + db.isOpen());
-                            boolean result = dh.addCourseNote(note);
-                            Log.d("DB RESULT", "" + result);
+                            boolean result = dh.addAssessment(a);
                             db.close();
 
                             //Reload activity
