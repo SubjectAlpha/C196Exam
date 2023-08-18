@@ -33,7 +33,7 @@ public class AssessmentFragment extends Fragment implements CourseActivity.Fragm
         course = act.getCourse();
 
         for(Assessment assessment : course.getAssessments()) {
-
+            getChildFragmentManager().beginTransaction().add(R.id.assessmentLayout, AssessmentCardFragment.newInstance(assessment)).commit();
         }
     }
 

@@ -152,11 +152,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Cursor courseNoteCursor = db.rawQuery("SELECT * FROM " + CourseNoteTable.NAME + " WHERE " + CourseNoteTable.COURSE_ID + " = ?;", new String[] {String.valueOf(courseId)});
 
             if(assessmentCursor.moveToFirst()) {
-                int index = 1;
-                do {
+                int idx = 1;
+                int assessmentIdIdx = assessmentCursor.getColumnIndex(AssessmentTable._ID);
+                int assessmentTitleIdx = assessmentCursor.getColumnIndex(AssessmentTable.TITLE);
+                int assessmentStartIdx = assessmentCursor.getColumnIndex(AssessmentTable.START);
+                int assessmentEndIdx = assessmentCursor.getColumnIndex(AssessmentTable.END);
+                int performanceIdx = assessmentCursor.getColumnIndex(AssessmentTable.IS_PERFORMANCE);
 
-                    assessmentCursor.close();
-                } while(assessmentCursor.move(index));
+                do {
+                    int isPerformance = assessmentCursor.getInt(performanceIdx);
+                    boolean isPerf = false;
+
+                    if(isPerformance == 1){
+                        isPerf = true;
+                    }
+
+                    assessments.add(new Assessment(
+                            assessmentCursor.getInt(assessmentIdIdx),
+                            assessmentCursor.getString(assessmentTitleIdx),
+                            assessmentCursor.getString(assessmentStartIdx),
+                            assessmentCursor.getString(assessmentEndIdx),
+                            isPerf,
+                            courseId
+                    ));
+                } while(assessmentCursor.move(idx));
+                assessmentCursor.close();
             }
 
             if(courseNoteCursor.moveToFirst()) {
@@ -167,13 +187,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     int noteIdIdx = courseNoteCursor.getColumnIndex(CourseNoteTable._ID);
 
                     notes.add(new CourseNote(
-                        courseNoteCursor.getInt(noteIdIdx),
-                        courseNoteCursor.getString(noteTitleIdx),
-                        courseNoteCursor.getString(noteContentIdx),
-                        courseId
+                            courseNoteCursor.getInt(noteIdIdx),
+                            courseNoteCursor.getString(noteTitleIdx),
+                            courseNoteCursor.getString(noteContentIdx),
+                            courseId
                     ));
 
-                } while(courseNoteCursor.move(idx));
+                } while (courseNoteCursor.move(idx));
+                courseNoteCursor.close();
             }
 
             try{
@@ -293,6 +314,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         courseCursor.close();
         return courseList;
+    }
+
+    public Assessment getAssessment(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + AssessmentTable.NAME + " WHERE " + AssessmentTable._ID + "=?;", new String[]{String.valueOf(id)});
+
+        if(c.moveToFirst()){
+            int assessmentIdIdx = c.getColumnIndex(AssessmentTable._ID);
+            int assessmentTitleIdx = c.getColumnIndex(AssessmentTable.TITLE);
+            int assessmentStartIdx = c.getColumnIndex(AssessmentTable.START);
+            int assessmentEndIdx = c.getColumnIndex(AssessmentTable.END);
+            int performanceIdx = c.getColumnIndex(AssessmentTable.IS_PERFORMANCE);
+            int courseIdIdx = c.getColumnIndex(AssessmentTable.COURSE_ID);
+
+            int isPerformance = c.getInt(performanceIdx);
+            boolean isPerf = false;
+
+            if(isPerformance == 1){
+                isPerf = true;
+            }
+
+            return new Assessment(
+                    c.getInt(assessmentIdIdx),
+                    c.getString(assessmentTitleIdx),
+                    c.getString(assessmentStartIdx),
+                    c.getString(assessmentEndIdx),
+                    isPerf, c.getInt(courseIdIdx));
+
+        }
+
+        return null;
     }
 
     public boolean addTerm(Term t) {
@@ -442,7 +494,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return success;
     }
 
-    public boolean modifyAssessment(Assessment assessment) {
+    public boolean updateAssessment(Assessment assessment) {
         boolean success = false;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -451,7 +503,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(AssessmentTable.TITLE, assessment.getTitle());
         cv.put(AssessmentTable.START, assessment.getStart());
         cv.put(AssessmentTable.END, assessment.getEnd());
-        cv.put(AssessmentTable.COURSE_ID, assessment.getCourseId());
+        cv.put(AssessmentTable.IS_PERFORMANCE, assessment.is_performance());
 
         long result = db.update(AssessmentTable.NAME,cv,
                 AssessmentTable._ID + "=?",

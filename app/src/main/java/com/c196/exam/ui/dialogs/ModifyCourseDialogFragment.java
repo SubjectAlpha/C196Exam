@@ -11,19 +11,24 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.c196.exam.R;
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Course;
 import com.c196.exam.ui.widgets.DatePicker;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ModifyCourseDialogFragment extends DialogFragment {
     public static String TAG = "ModifyCourseDialog";
@@ -51,7 +56,12 @@ public class ModifyCourseDialogFragment extends DialogFragment {
         final EditText instructorLastName = new EditText(this.requireContext());
         final EditText instructorEmail = new EditText(this.requireContext());
         final EditText instructorPhone = new EditText(this.requireContext());
-        final Button deleteButton = new Button(this.getContext());
+        final Button deleteButton = new Button(this.requireContext());
+        final Spinner statusSelect = new Spinner(this.requireContext());
+
+        ArrayList<Course.Statuses> arrayList = new ArrayList<>(Arrays.asList(Course.Statuses.values()));
+        ArrayAdapter<Course.Statuses> spinnerAdapter = new ArrayAdapter<>(this.requireContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, arrayList);
+        statusSelect.setAdapter(spinnerAdapter);
 
         startDate.setInputType(InputType.TYPE_CLASS_DATETIME);
         endDate.setInputType(InputType.TYPE_CLASS_DATETIME);
@@ -73,7 +83,7 @@ public class ModifyCourseDialogFragment extends DialogFragment {
         instructorEmail.setText(COURSE.getInstructorEmail());
         instructorPhone.setText(COURSE.getInstructorPhone());
 
-        deleteButton.setText("Delete Term");
+        deleteButton.setText("Delete Course");
         deleteButton.setBackgroundColor(Color.RED);
         deleteButton.setOnClickListener((v) -> {
             try(DatabaseHelper dbh = new DatabaseHelper(this.getContext())){
@@ -105,6 +115,7 @@ public class ModifyCourseDialogFragment extends DialogFragment {
         layout.addView(instructorLastName);
         layout.addView(instructorEmail);
         layout.addView(instructorPhone);
+        layout.addView(statusSelect);
         layout.addView(deleteButton);
 
         builder.setTitle("Modify a class");
@@ -115,7 +126,7 @@ public class ModifyCourseDialogFragment extends DialogFragment {
                     String endDateTime = "";
                     Toast t = new Toast(this.getContext());
                     String courseName = className.getText().toString();
-                    String courseStatus = Course.Statuses.PENDING.name();
+                    String courseStatus = statusSelect.getSelectedItem().toString();
                     String ciFName = instructorFirstName.getText().toString();
                     String ciLName = instructorLastName.getText().toString();
                     String ciEmail = instructorEmail.getText().toString();

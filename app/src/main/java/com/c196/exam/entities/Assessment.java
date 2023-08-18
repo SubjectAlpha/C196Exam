@@ -57,7 +57,7 @@ public class Assessment {
         this.end = end;
     }
 
-    public boolean isIs_performance() {
+    public boolean is_performance() {
         return is_performance;
     }
 

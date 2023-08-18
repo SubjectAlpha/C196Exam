@@ -1,5 +1,6 @@
 package com.c196.exam.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,11 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.c196.exam.R;
+import com.c196.exam.database.DatabaseHelper;
+import com.c196.exam.entities.Assessment;
 import com.c196.exam.entities.CourseNote;
+import com.c196.exam.ui.dialogs.ModifyAssessmentDialogFragment;
+import com.c196.exam.ui.dialogs.ModifyTermDialogFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,22 +24,30 @@ import com.c196.exam.entities.CourseNote;
 public class AssessmentCardFragment extends Fragment {
 
     private TextView titleText;
+    private TextView startText;
+    private TextView endText;
 
-    private static final String NOTE_TITLE = "COURSE_TITLE";
-    private static final String NOTE_CONTENT = "COURSE_CONTENT";
+    private static final String ASSESSMENT_TITLE = "ASSESSMENT_TITLE";
+    private static final String ASSESSMENT_START = "ASSESSMENT_START";
+    private static final String ASSESSMENT_END = "ASSESSMENT_END";
+    private static final String ASSESSMENT_ID = "ASSESSMENT_ID";
 
-    private String noteTitle;
-    private String noteContent;
+    private String assessmentTitle;
+    private String assessmentStart;
+    private String assessmentEnd;
+    private int assessmentId;
 
     public AssessmentCardFragment() {
         // Required empty public constructor
     }
 
-    public static AssessmentCardFragment newInstance(CourseNote note) {
+    public static AssessmentCardFragment newInstance(Assessment assessment) {
         AssessmentCardFragment fragment = new AssessmentCardFragment();
         Bundle args = new Bundle();
-        args.putString(NOTE_TITLE, note.getTitle());
-        args.putString(NOTE_CONTENT, note.getContent());
+        args.putString(ASSESSMENT_TITLE, assessment.getTitle());
+        args.putString(ASSESSMENT_START, assessment.getStart());
+        args.putString(ASSESSMENT_END, assessment.getEnd());
+        args.putInt(ASSESSMENT_ID, assessment.getId());
         fragment.setArguments(args);
 
         return fragment;
@@ -44,8 +57,10 @@ public class AssessmentCardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            noteTitle = getArguments().getString(NOTE_TITLE);
-            noteContent = getArguments().getString(NOTE_CONTENT);
+            assessmentTitle = getArguments().getString(ASSESSMENT_TITLE);
+            assessmentStart = getArguments().getString(ASSESSMENT_START);
+            assessmentEnd = getArguments().getString(ASSESSMENT_END);
+            assessmentId = getArguments().getInt(ASSESSMENT_ID);
         }
     }
 
@@ -54,14 +69,21 @@ public class AssessmentCardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_card, container, false);
         titleText = v.findViewById(R.id.name);
+        startText = v.findViewById(R.id.start);
+        endText = v.findViewById(R.id.end);
 
-        titleText.setText(noteTitle);
+        titleText.setText(assessmentTitle);
+        startText.setText(assessmentStart);
+        endText.setText(assessmentEnd);
 
-        /*v.setOnClickListener((view) -> {
-            Intent i = new Intent(getContext(), CourseActivity.class);
-            i.putExtra("courseId", courseId);
-            getActivity().startActivity(i);
-        });*/
+        v.setOnClickListener((view) -> {
+            Assessment assessment;
+            try(DatabaseHelper dbh = new DatabaseHelper(this.getContext())){
+                assessment = dbh.getAssessment(assessmentId);
+            }
+            ModifyAssessmentDialogFragment modifyAssessmentDialogFragment = new ModifyAssessmentDialogFragment(assessment);
+            modifyAssessmentDialogFragment.show(this.getChildFragmentManager(), ModifyAssessmentDialogFragment.TAG);
+        });
 
         return v;
     }
