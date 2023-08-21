@@ -9,8 +9,7 @@ import android.os.Bundle;
 
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Course;
-import com.c196.exam.ui.dialogs.CreateClassDialogFragment;
-import com.c196.exam.ui.dialogs.CreateNoteDialogFragment;
+import com.c196.exam.utility.ViewPagerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 

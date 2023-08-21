@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -45,6 +47,8 @@ public class ModifyAssessmentDialogFragment extends DialogFragment {
         final RadioGroup radioGroup = new RadioGroup(this.getContext());
         final RadioButton performanceButton = new RadioButton(this.getContext());
         final RadioButton objectiveButton = new RadioButton(this.getContext());
+        final Button deleteButton = new Button(this.requireContext());
+
         performanceButton.setText("Performance Assessment");
         objectiveButton.setText("Objective Assessment");
         radioGroup.addView(performanceButton);
@@ -64,11 +68,37 @@ public class ModifyAssessmentDialogFragment extends DialogFragment {
             objectiveButton.setChecked(true);
         }
 
+        deleteButton.setText("Delete Assessment");
+        deleteButton.setBackgroundColor(Color.RED);
+        deleteButton.setOnClickListener((v) -> {
+            try(DatabaseHelper dbh = new DatabaseHelper(this.getContext())){
+                boolean result = dbh.deleteAssessment(assessment.getId());
+                dbh.close();
+                if(result){
+                    //Reload activity
+                    Activity activity = getActivity();
+                    activity.finish();
+                    activity.startActivity(this.getActivity().getIntent());
+                }else{
+                    Toast t = new Toast(this.getContext());
+                    t.setText("Delete failed! Please try again.");
+                    t.show();
+                }
+
+
+            }catch(Exception ex) {
+                Toast t = new Toast(this.getContext());
+                t.setText(ex.getMessage());
+                t.show();
+            }
+        });
+
         layout.addView(title);
         layout.addView(start);
         layout.addView(end);
         layout.addView(radioGroup);
-        builder.setTitle("Create a new assessment");
+        layout.addView(deleteButton);
+        builder.setTitle("Modify assessment");
         builder.setView(layout)
                 // Add action button validates the start/end dates before and after conversion
                 .setPositiveButton("Update", (dialog, id) -> {
