@@ -63,11 +63,19 @@ public class NoteCardFragment extends Fragment {
         titleText.setText(noteTitle);
         contentText.setText(noteContent);
 
-        /*v.setOnClickListener((view) -> {
-            Intent i = new Intent(getContext(), CourseActivity.class);
-            i.putExtra("courseId", courseId);
-            getActivity().startActivity(i);
-        });*/
+        v.setOnLongClickListener((l) -> {
+            Intent i = new Intent();
+            i.setAction(Intent.ACTION_SEND);
+            i.putExtra(Intent.EXTRA_SUBJECT, noteTitle);
+            i.putExtra(Intent.EXTRA_TEXT, noteContent);
+            i.setType("text/plain");
+
+            if(i.resolveActivity(getActivity().getPackageManager()) != null){
+                startActivity(i);
+            }
+
+            return true;
+        });
 
         return v;
     }
