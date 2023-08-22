@@ -54,11 +54,19 @@ public class CourseFragment extends Fragment implements CourseActivity.FragmentL
         instructorEmail.setText("Email: " + course.getInstructorEmail());
         instructorPhone.setText("Phone: " + course.getInstructorPhone());
 
-        for(CourseNote note : course.getNotes()) {
-            getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
+        if(savedInstanceState == null){
+            for(CourseNote note : course.getNotes()) {
+                getChildFragmentManager().beginTransaction().add(R.id.noteLayout, NoteCardFragment.newInstance(note)).commit();
+            }
         }
 
         return v;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("reRender", false);
     }
 
     @Override

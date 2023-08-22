@@ -117,7 +117,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int index = 1;
             do {
                 Term t = new Term(c.getInt(0), c.getString(1), c.getString(2), c.getString(3));
-                t.setCourses(getCourses(t.getId()));
+                t.setCourses(this.getCourses(t.getId()));
                 termList.add(t);
             } while(c.move(index));
         }

@@ -32,9 +32,17 @@ public class AssessmentFragment extends Fragment implements CourseActivity.Fragm
         act.setFragmentListener(this);
         course = act.getCourse();
 
-        for(Assessment assessment : course.getAssessments()) {
-            getChildFragmentManager().beginTransaction().add(R.id.assessmentLayout, AssessmentCardFragment.newInstance(assessment)).commit();
+        if(savedInstanceState == null){
+            for(Assessment assessment : course.getAssessments()) {
+                getChildFragmentManager().beginTransaction().add(R.id.assessmentLayout, AssessmentCardFragment.newInstance(assessment)).commit();
+            }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("reRender", false);
     }
 
     @Override

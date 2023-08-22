@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import com.c196.exam.database.DatabaseHelper;
@@ -43,9 +44,12 @@ public class CourseActivity extends AppCompatActivity {
         Integer id = newIntent.getIntExtra("courseId", -1);
         course = dbh.getCourse(id);
 
+        String start = course.getStart().split("T")[0];
+        String end = course.getEnd().split("T")[0];
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
         myToolbar.setTitle(course.getTitle());
-        myToolbar.setSubtitle("Status: " + course.getStatus());
+        myToolbar.setSubtitle(start + " - " + end + " Status: " + course.getStatus());
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

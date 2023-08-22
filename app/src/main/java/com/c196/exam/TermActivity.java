@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ public class TermActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term);
+
         DatabaseHelper dbh = new DatabaseHelper(this);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
@@ -48,8 +50,16 @@ public class TermActivity extends AppCompatActivity {
 
         LinearLayout ll = findViewById(R.id.main_layout);
 
-        for ( Course c : dbh.getCourses(id) ) {
-            getSupportFragmentManager().beginTransaction().add(ll.getId(), TermCardFragment.newInstance(c)).commit();
+        if(savedInstanceState == null){
+            for ( Course c : dbh.getCourses(id) ) {
+                getSupportFragmentManager().beginTransaction().add(ll.getId(), TermCardFragment.newInstance(c)).commit();
+            }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("reRender", false);
     }
 }
