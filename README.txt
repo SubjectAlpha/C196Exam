@@ -1,0 +1,1 @@
+To edit items long press on the cards to bring up the edit/delete dialog. This will work for terms and courses. Assessments are a tap, notes are a long hold to share.
