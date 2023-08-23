@@ -53,7 +53,13 @@ public class AssessmentFragment extends Fragment implements CourseActivity.Fragm
     }
 
     @Override
-    public void addNote() {}
+    public void addNote() {
+        CreateNoteDialogFragment noteDialogFragment = new CreateNoteDialogFragment();
+        Bundle b = new Bundle();
+        b.putInt("courseId", course.getId());
+        noteDialogFragment.setArguments(b);
+        noteDialogFragment.show(getChildFragmentManager(), CreateNoteDialogFragment.TAG);
+    }
 
     @Override
     public void addAssessment() {
@@ -61,6 +67,6 @@ public class AssessmentFragment extends Fragment implements CourseActivity.Fragm
         Bundle b = new Bundle();
         b.putInt("courseId", course.getId());
         createAssessmentDialogFragment.setArguments(b);
-        createAssessmentDialogFragment.show(getChildFragmentManager(), CreateNoteDialogFragment.TAG);
+        createAssessmentDialogFragment.show(getChildFragmentManager(), CreateAssessmentDialogFragment.TAG);
     }
 }

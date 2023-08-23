@@ -49,7 +49,7 @@ public class CourseActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
         myToolbar.setTitle(course.getTitle());
-        myToolbar.setSubtitle(start + " - " + end + " Status: " + course.getStatus());
+        myToolbar.setSubtitle(start + " - " + end);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -80,8 +80,10 @@ public class CourseActivity extends AppCompatActivity {
             switch (viewPager.getCurrentItem()) {
                 case 0:
                     fragmentListener.addNote();
+                    break;
                 case 1:
                     fragmentListener.addAssessment();
+                    break;
             }
         });
     }
