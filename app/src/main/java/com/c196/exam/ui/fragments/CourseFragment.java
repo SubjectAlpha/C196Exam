@@ -15,11 +15,7 @@ import com.c196.exam.R;
 import com.c196.exam.entities.Course;
 import com.c196.exam.entities.CourseNote;
 import com.c196.exam.ui.dialogs.CreateAssessmentDialogFragment;
-import com.c196.exam.ui.dialogs.CreateClassDialogFragment;
 import com.c196.exam.ui.dialogs.CreateNoteDialogFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 public class CourseFragment extends Fragment implements CourseActivity.FragmentListener {
 

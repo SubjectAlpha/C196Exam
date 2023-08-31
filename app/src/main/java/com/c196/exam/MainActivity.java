@@ -1,22 +1,29 @@
 package com.c196.exam;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Assessment;
 import com.c196.exam.entities.Course;
 import com.c196.exam.entities.Term;
+import com.c196.exam.ui.dialogs.CreateNotificationDialogFragment;
 import com.c196.exam.ui.dialogs.CreateTermDialogFragment;
 import com.c196.exam.ui.fragments.MainCardFragment;
 import com.c196.exam.utility.NotificationService;
@@ -26,21 +33,27 @@ import java.time.Instant;
 
 public class MainActivity extends AppCompatActivity {
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NotificationChannel channel = new NotificationChannel(NotificationService.CHANNEL_ID, NotificationService.CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-        channel.setDescription(NotificationService.CHANNEL_DESC);
-        NotificationManager nManager = getSystemService(NotificationManager.class);
-        nManager.createNotificationChannel(channel);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] {Manifest.permission.POST_NOTIFICATIONS}, 100);
+        }
 
         DatabaseHelper dbh = new DatabaseHelper(this);
         //dbh.onUpgrade(dbh.getReadableDatabase(), 0, 1);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+
+        Button notificationButton = findViewById(R.id.notificationButton);
+        notificationButton.setOnClickListener((v) -> {
+            CreateNotificationDialogFragment createNotificationDialogFragment = new CreateNotificationDialogFragment();
+            createNotificationDialogFragment.show(getSupportFragmentManager(), CreateNotificationDialogFragment.TAG);
+        });
 
         FloatingActionButton fab = findViewById(R.id.addTerm);
         fab.setOnClickListener((v) -> {
@@ -51,60 +64,8 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout ll = findViewById(R.id.main_layout);
 
         if(savedInstanceState == null){
-            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-            NotificationService ns = new NotificationService();
+
             for ( Term t : dbh.getTerms() ) {
-
-                //Notification Logic
-                //If a term is coming up within a week, notify, same for class, and assessment
-                //If a term is ending within a week, notify
-
-                int secondsInAWeek = 604800;
-                Instant now = Instant.now();
-                Instant weekFromNow = now.plusSeconds(secondsInAWeek);
-                Instant termStart = Instant.parse(t.getStart());
-                Instant termEnd = Instant.parse(t.getEnd());
-
-                if(termStart.isBefore(now) && termStart.isAfter(weekFromNow)){
-                    String content = "Your term " + t.getTitle() + " begins next week!";
-                    ns.scheduleNotification(this, am,0, "Term Starting Soon", content);
-                }
-
-                if(termEnd.isBefore(now) && termEnd.isAfter(weekFromNow)){
-                    String content = "Your term " + t.getTitle() + " ends next week!";
-                    ns.scheduleNotification(this, am,0, "Term Ending Soon", content);
-                }
-
-                for(Course c : t.getCourses()){
-                    Instant courseStart = Instant.parse(c.getStart());
-                    Instant courseEnd = Instant.parse(c.getEnd());
-
-                    if(courseStart.isBefore(now) && courseStart.isAfter(weekFromNow)){
-                        String content = "Your course " + c.getTitle() + " begins next week!";
-                        ns.scheduleNotification(this, am,0, "Course Starting Soon", content);
-                    }
-
-                    if(courseEnd.isBefore(now) && courseEnd.isAfter(weekFromNow)){
-                        String content = "Your course " + c.getTitle() + " ends next week!";
-                        ns.scheduleNotification(this, am,0, "Course Ending Soon", content);
-                    }
-
-                    for(Assessment a : c.getAssessments()){
-                        Instant assessmentStart = Instant.parse(a.getStart() + "T00:00:00Z");
-                        Instant assessmentEnd = Instant.parse(a.getEnd() + "T00:00:00Z");
-
-                        if(assessmentStart.isBefore(now) && assessmentStart.isAfter(weekFromNow)){
-                            String content = "Your assessment " + a.getTitle() + " begins next week!";
-                            ns.scheduleNotification(this, am,0, "Assessment Opens Soon", content);
-                        }
-
-                        if(assessmentEnd.isBefore(now) && assessmentEnd.isAfter(weekFromNow)){
-                            String content = "Your assessment " + a.getTitle() + " ends next week!";
-                            ns.scheduleNotification(this, am,0, "Assessment Due Soon", content);
-                        }
-                    }
-                }
-
                 getSupportFragmentManager().beginTransaction().add(ll.getId(), MainCardFragment.newInstance(t)).commit();
             }
         }

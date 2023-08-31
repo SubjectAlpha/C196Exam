@@ -15,8 +15,6 @@ import com.c196.exam.entities.Course;
 import com.c196.exam.ui.dialogs.CreateAssessmentDialogFragment;
 import com.c196.exam.ui.dialogs.CreateNoteDialogFragment;
 
-import java.util.ArrayList;
-
 public class AssessmentFragment extends Fragment implements CourseActivity.FragmentListener {
 
     Course course;

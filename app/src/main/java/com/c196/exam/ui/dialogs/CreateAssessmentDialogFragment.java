@@ -16,10 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.c196.exam.R;
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Assessment;
-import com.c196.exam.entities.CourseNote;
 import com.c196.exam.ui.widgets.DatePicker;
 
 public class CreateAssessmentDialogFragment extends DialogFragment {

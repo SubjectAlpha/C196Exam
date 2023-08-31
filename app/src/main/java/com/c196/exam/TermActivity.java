@@ -8,11 +8,13 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Course;
 import com.c196.exam.ui.dialogs.CreateClassDialogFragment;
+import com.c196.exam.ui.dialogs.CreateNotificationDialogFragment;
 import com.c196.exam.ui.fragments.TermCardFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -38,6 +40,12 @@ public class TermActivity extends AppCompatActivity {
 
         myToolbar.setTitle(title);
         myToolbar.setSubtitle(start + " - " + end);
+
+        Button notificationButton = findViewById(R.id.notificationButton);
+        notificationButton.setOnClickListener((v) -> {
+            CreateNotificationDialogFragment createNotificationDialogFragment = new CreateNotificationDialogFragment();
+            createNotificationDialogFragment.show(getSupportFragmentManager(), CreateNotificationDialogFragment.TAG);
+        });
 
         FloatingActionButton fab = findViewById(R.id.addCourse);
         fab.setOnClickListener((v) -> {

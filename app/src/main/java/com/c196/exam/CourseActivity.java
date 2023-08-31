@@ -7,9 +7,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.widget.Button;
 
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Course;
+import com.c196.exam.ui.dialogs.CreateNotificationDialogFragment;
 import com.c196.exam.utility.ViewPagerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -50,6 +52,13 @@ public class CourseActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
         myToolbar.setTitle(course.getTitle());
         myToolbar.setSubtitle(start + " - " + end);
+
+        Button notificationButton = findViewById(R.id.notificationButton);
+        notificationButton.setOnClickListener((v) -> {
+            CreateNotificationDialogFragment createNotificationDialogFragment = new CreateNotificationDialogFragment();
+            createNotificationDialogFragment.show(getSupportFragmentManager(), CreateNotificationDialogFragment.TAG);
+        });
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
