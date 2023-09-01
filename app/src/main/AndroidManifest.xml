@@ -16,13 +16,10 @@
         android:theme="@style/Theme.C196Exam"
         tools:targetApi="31">
         <activity
-            android:name=".CourseActivity"
+            android:name=".ScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".TermActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +27,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".utility.NotificationReceiver"/>
+        <activity
+            android:name=".CourseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TermActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <receiver android:name=".utility.NotificationReceiver" />
     </application>
 
 </manifest>
