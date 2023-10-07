@@ -7,10 +7,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 
 import com.c196.exam.database.DatabaseHelper;
 import com.c196.exam.entities.Course;
+import com.c196.exam.entities.Term;
 import com.c196.exam.ui.dialogs.CreateNotificationDialogFragment;
 import com.c196.exam.utility.ViewPagerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -50,6 +52,9 @@ public class CourseActivity extends AppCompatActivity {
         String end = course.getEnd().split("T")[0];
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         myToolbar.setTitle(course.getTitle());
         myToolbar.setSubtitle(start + " - " + end);
 
@@ -104,5 +109,27 @@ public class CourseActivity extends AppCompatActivity {
 
     public void setFragmentListener(FragmentListener listener) {
         fragmentListener = listener;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                Intent i = new Intent(this, TermActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                DatabaseHelper dbh = new DatabaseHelper(this);
+                Term t = dbh.getTerm(course.getTermId());
+
+                i.putExtra("title", t.getTitle());
+                i.putExtra("start", t.getStart());
+                i.putExtra("end", t.getEnd());
+                i.putExtra("id", course.getTermId());
+                startActivity(i);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -125,6 +125,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return termList;
     }
 
+    public Term getTerm(Integer id) {
+        Term t = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TermTable.NAME + " WHERE " + TermTable._ID + " = ?;", new String[] {String.valueOf(id)});
+
+        if(c.moveToFirst()){
+            t = new Term(c.getInt(0), c.getString(1), c.getString(2), c.getString(3));
+            t.setCourses(this.getCourses(t.getId()));
+        }
+
+        return t;
+    }
+
     public Course getCourse(int id) {
         Course course = null;
 
