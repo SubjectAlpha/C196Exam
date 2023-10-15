@@ -12,10 +12,10 @@ import com.c196.exam.R;
 import java.util.ArrayList;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>{
-    private final ArrayList<String> daysOfMonth;
+    private final ArrayList<String[]> daysOfMonth;
     private final OnItemListener onItemListener;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener onItemListener)
+    public CalendarAdapter(ArrayList<String[]> daysOfMonth, OnItemListener onItemListener)
     {
         this.daysOfMonth = daysOfMonth;
         this.onItemListener = onItemListener;
@@ -28,14 +28,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>{
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.fragment_calendar_cell, parent, false);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = (int) (parent.getHeight() * 0.25);
+        layoutParams.height = (int) (parent.getHeight() * 0.14);
         return new CalendarViewHolder(view, onItemListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position)
     {
-        holder.dayOfMonth.setText(daysOfMonth.get(position));
+        holder
+        holder.dayOfMonth.setText(daysOfMonth.get(position)[0]);
     }
 
     @Override

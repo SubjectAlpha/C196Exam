@@ -12,8 +12,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.c196.exam.database.DatabaseHelper;
+import com.c196.exam.entities.Course;
+import com.c196.exam.entities.Term;
 import com.c196.exam.ui.widgets.CalendarAdapter;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -56,6 +60,20 @@ public class ScheduleActivity extends AppCompatActivity implements CalendarAdapt
 
     private void setMonthView()
     {
+        // First we want to determine which term we're in
+        // Load that term, and its classes
+        // Display classes under terms
+        // Display assessments on their scheduled day
+
+        ArrayList<Course> courses = null;
+        DatabaseHelper dbh = new DatabaseHelper(this);
+        Term term = dbh.getTerm(selectedDate);
+
+        if(term != null)
+        {
+            courses = term.getCourses();
+        }
+
         monthYearText.setText(getMonthYear(selectedDate));
         ArrayList<String> daysInMonthArray = new ArrayList<>();
         YearMonth yearMonth = YearMonth.from(selectedDate);
@@ -73,6 +91,25 @@ public class ScheduleActivity extends AppCompatActivity implements CalendarAdapt
             }
             else
             {
+                if(courses != null) {
+                    Course course = null;
+
+                    for(int ii = 0; ii < courses.size(); ii++)
+                    {
+                        Course c = courses.get(ii);
+                        LocalDate courseStart = LocalDate.parse(c.getStart());
+                        LocalDate courseEnd = LocalDate.parse(c.getEnd());
+                        LocalDate termStart = LocalDate.parse(term.getStart());
+                        LocalDate termEnd = LocalDate.parse(term.getEnd());
+
+                        boolean dateIsDuringTerm = selectedDate.isAfter(termStart) && selectedDate.isBefore(termEnd);
+                        boolean dateIsDuringCourse = selectedDate.isAfter(courseStart) && selectedDate.isBefore(courseEnd);
+                        if(dateIsDuringTerm && dateIsDuringCourse) {
+                            course = c;
+                        }
+                    };
+                }
+
                 daysInMonthArray.add(String.valueOf(i - dayOfWeek));
             }
         }
@@ -108,5 +145,11 @@ public class ScheduleActivity extends AppCompatActivity implements CalendarAdapt
             String message = "Selected Date " + dayText + " " + getMonthYear(selectedDate);
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    public class CalendarDay {
+        public String termTitle;
+        public String courseTitle;
+        public String assignmentTitle;
     }
 }

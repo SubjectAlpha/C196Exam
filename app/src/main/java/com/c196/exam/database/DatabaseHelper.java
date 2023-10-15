@@ -2,7 +2,6 @@ package com.c196.exam.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.CharArrayBuffer;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -13,7 +12,10 @@ import com.c196.exam.entities.Course;
 import com.c196.exam.entities.CourseNote;
 import com.c196.exam.entities.Term;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DB_VERSION = 1;
@@ -137,6 +139,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return t;
+    }
+
+    public Term getTerm(LocalDate date) {
+        Instant selectedDateInstant = Instant.parse(date.toString() + "T00:00:00Z");
+        Term selectedTerm = null;
+        ArrayList<Term> terms = getTerms();
+
+        for(int i = 0; i < terms.size(); i++) {
+            Term t = terms.get(i);
+            Instant start = Instant.parse(t.getStart());
+            Instant end = Instant.parse(t.getEnd());
+
+            Boolean isAfterStart = selectedDateInstant.isAfter(start);
+            Boolean isBeforeEnd = selectedDateInstant.isBefore(end);
+            if( isAfterStart && isBeforeEnd )
+            {
+                selectedTerm = t;
+                break;
+            }
+        }
+
+        return selectedTerm;
     }
 
     public Course getCourse(int id) {
