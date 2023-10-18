@@ -14,15 +14,9 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         Button termsButton = findViewById(R.id.termsButton);
-        Button scheduleButton = findViewById(R.id.scheduleButton);
 
         termsButton.setOnClickListener((v) -> {
             Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-        });
-
-        scheduleButton.setOnClickListener((v) -> {
-            Intent i = new Intent(this, ScheduleActivity.class);
             startActivity(i);
         });
     }

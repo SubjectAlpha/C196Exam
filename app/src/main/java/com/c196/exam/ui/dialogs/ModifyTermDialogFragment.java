@@ -83,7 +83,7 @@ public class ModifyTermDialogFragment extends DialogFragment {
         layout.addView(startDate);
         layout.addView(endDate);
         layout.addView(deleteButton);
-        builder.setTitle("Modify term {term}");
+        builder.setTitle("Modify term");
         builder.setView(layout)
                 // Add action button validates the start/end dates before and after conversion
                 .setPositiveButton("Save", (dialog, id) -> {

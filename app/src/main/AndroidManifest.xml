@@ -16,9 +16,6 @@
         android:theme="@style/Theme.C196Exam"
         tools:targetApi="31">
         <activity
-            android:name=".ScheduleActivity"
-            android:exported="false" />
-        <activity
             android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
