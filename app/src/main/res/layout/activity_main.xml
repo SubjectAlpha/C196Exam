@@ -17,13 +17,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
         <Button
             android:id="@+id/notificationButton"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="Add Notification"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
             android:layout_gravity="end"
-        />
+            android:text="Add Notification"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:layout_editor_absoluteX="260dp"
+            tools:layout_editor_absoluteY="7dp" />
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
