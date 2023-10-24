@@ -385,6 +385,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    public CourseNote getNote(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + CourseNoteTable.NAME + " WHERE " + CourseNoteTable._ID + "=?;", new String[]{String.valueOf(id)});
+        if(c.moveToFirst()) {
+            int noteIdIdx = c.getColumnIndex(CourseNoteTable._ID);
+            int noteTitleIdx = c.getColumnIndex(CourseNoteTable.TITLE);
+            int noteContextIdx = c.getColumnIndex(CourseNoteTable.CONTENT);
+            int noteCourseIdIdx = c.getColumnIndex(CourseNoteTable.COURSE_ID);
+
+            return new CourseNote(
+                    c.getInt(noteIdIdx),
+                    c.getString(noteTitleIdx),
+                    c.getString(noteContextIdx),
+                    c.getInt(noteCourseIdIdx)
+            );
+        }
+
+        return null;
+    }
+
     public boolean addTerm(Term t) {
         boolean success = false;
 
@@ -554,12 +574,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return success;
     }
 
+    public boolean updateNote(CourseNote note) {
+        boolean success = false;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(CourseNoteTable.TITLE, note.getTitle());
+        cv.put(CourseNoteTable.CONTENT, note.getContent());
+
+        long result = db.update(CourseNoteTable.NAME, cv,
+                CourseNoteTable._ID + "=?",
+                new String[]{String.valueOf(note.getId())
+                });
+        if(result > 0){
+            success = true;
+        }
+
+        return success;
+    }
+
     public boolean deleteAssessment(int id) {
         boolean success = false;
         SQLiteDatabase db = this.getWritableDatabase();
 
         long result = db.delete(AssessmentTable.NAME,
                 AssessmentTable._ID + "=?",
+                new String[]{String.valueOf(id)
+                });
+
+        if(result > 0){
+            success = true;
+        }
+
+        return success;
+    }
+
+    public boolean deleteNote(int id) {
+        boolean success = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(CourseNoteTable.NAME,
+                CourseNoteTable._ID + "=?",
                 new String[]{String.valueOf(id)
                 });
 

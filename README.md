@@ -30,7 +30,7 @@ In order to overcome the issues I had with learning Android, I spent a lot of ti
 
 ### F5
 
-If I were to do this project again I would **not** go off and make my own calendar application again. I wrote a calendar view that would display occurring terms, courses, and assessments as I thought that was the 'scheduler' part of section C.
+If I were to do this project again I would **not** go off and make my own calendar application again. I wrote a calendar view that would display occurring terms, courses, and assessments as I thought that was the 'scheduler' defined as part of section C. I would instead spend more time meeting with my course instructor getting the help I needed to better understand some of the requirements.
 
 ### F6
 
