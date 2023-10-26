@@ -71,7 +71,7 @@ public class ModifyCourseDialogFragment extends DialogFragment {
 
         className.setHint("Class name");
         instructorFirstName.setHint("Instructor First Name");
-        instructorLastName.setHint("Instructor First Name");
+        instructorLastName.setHint("Instructor Last Name");
         instructorEmail.setHint("Instructor Email");
         instructorPhone.setHint("Instructor Phone Number");
 
@@ -82,6 +82,11 @@ public class ModifyCourseDialogFragment extends DialogFragment {
         instructorLastName.setText(COURSE.getInstructorLastName());
         instructorEmail.setText(COURSE.getInstructorEmail());
         instructorPhone.setText(COURSE.getInstructorPhone());
+        statusSelect.setSelection(
+            spinnerAdapter.getPosition(
+                Course.Statuses.valueOf(COURSE.getStatus())
+            )
+        );
 
         deleteButton.setText("Delete Course");
         deleteButton.setBackgroundColor(Color.RED);

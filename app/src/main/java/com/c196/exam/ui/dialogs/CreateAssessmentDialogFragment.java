@@ -59,7 +59,7 @@ public class CreateAssessmentDialogFragment extends DialogFragment {
 
                     try{
                         Integer courseId = this.getArguments().getInt("courseId");
-                        boolean isPerformance = performanceButton.isSelected();
+                        boolean isPerformance = performanceButton.isChecked();
                         Assessment a = new Assessment(
                                 title.getText().toString(),
                                 start.getText().toString(),

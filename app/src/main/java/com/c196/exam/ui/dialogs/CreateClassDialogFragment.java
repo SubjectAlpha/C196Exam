@@ -11,8 +11,10 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.textclassifier.TextClassifier;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,8 @@ import com.c196.exam.entities.Term;
 import com.c196.exam.ui.widgets.DatePicker;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CreateClassDialogFragment extends DialogFragment {
     public static String TAG = "CreateClassDialog";
@@ -45,6 +49,11 @@ public class CreateClassDialogFragment extends DialogFragment {
         final EditText instructorLastName = new EditText(this.requireContext());
         final EditText instructorEmail = new EditText(this.requireContext());
         final EditText instructorPhone = new EditText(this.requireContext());
+        final Spinner statusSelect = new Spinner(this.requireContext());
+
+        ArrayList<Course.Statuses> arrayList = new ArrayList<>(Arrays.asList(Course.Statuses.values()));
+        ArrayAdapter<Course.Statuses> spinnerAdapter = new ArrayAdapter<>(this.requireContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, arrayList);
+        statusSelect.setAdapter(spinnerAdapter);
 
         startDate.setInputType(InputType.TYPE_CLASS_DATETIME);
         endDate.setInputType(InputType.TYPE_CLASS_DATETIME);
@@ -64,6 +73,7 @@ public class CreateClassDialogFragment extends DialogFragment {
         layout.addView(instructorLastName);
         layout.addView(instructorEmail);
         layout.addView(instructorPhone);
+        layout.addView(statusSelect);
         builder.setTitle("Create a new class");
         builder.setView(layout)
                 // Add action button validates the start/end dates before and after conversion
@@ -72,7 +82,7 @@ public class CreateClassDialogFragment extends DialogFragment {
                     String endDateTime = "";
                     Toast t = new Toast(this.getContext());
                     String courseName = className.getText().toString();
-                    String courseStatus = Course.Statuses.PENDING.name();
+                    String courseStatus = statusSelect.getSelectedItem().toString();
                     String ciFName = instructorFirstName.getText().toString();
                     String ciLName = instructorLastName.getText().toString();
                     String ciEmail = instructorEmail.getText().toString();

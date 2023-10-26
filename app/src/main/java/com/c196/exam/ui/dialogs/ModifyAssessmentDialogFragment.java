@@ -105,7 +105,7 @@ public class ModifyAssessmentDialogFragment extends DialogFragment {
                     Toast t = new Toast(this.getContext());
 
                     try{
-                        boolean isPerformance = performanceButton.isSelected();
+                        boolean isPerformance = performanceButton.isChecked();
                         Assessment a = new Assessment(
                                 assessment.getId(),
                                 title.getText().toString(),
