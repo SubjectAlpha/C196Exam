@@ -542,6 +542,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(AssessmentTable.TITLE, assessment.getTitle());
         cv.put(AssessmentTable.START, assessment.getStart());
         cv.put(AssessmentTable.END, assessment.getEnd());
+        cv.put(AssessmentTable.IS_PERFORMANCE, assessment.is_performance());
         cv.put(AssessmentTable.COURSE_ID, assessment.getCourseId());
 
         long result = db.insert(AssessmentTable.NAME, null, cv);
