@@ -63,7 +63,7 @@ public class CreateClassDialogFragment extends DialogFragment {
 
         className.setHint("Class name");
         instructorFirstName.setHint("Instructor First Name");
-        instructorLastName.setHint("Instructor First Name");
+        instructorLastName.setHint("Instructor Last Name");
         instructorEmail.setHint("Instructor Email");
         instructorPhone.setHint("Instructor Phone Number");
         layout.addView(className);
